@@ -1,0 +1,151 @@
+PHP Syntax:
+<?php
+echo 'Hello World!<br>';
+?>
+
+PHP Comments:
+// This is a single-line comment
+# This is also a single-line comment
+
+/* This is a
+multi-line
+comment */
+
+PHP Variables:
+<?php
+
+$name = "Arid<br>";
+$Name = "Asif<br>";
+$age = 30;
+
+//echo 'Hey!';
+
+echo $name;
+echo $Name;
+echo $age;
+
+?>
+
+PHP Data Types:
+<?php
+
+
+$name = "Arid<br>";
+$age = '30<br>';
+$cgpa = '3.95<br>';
+$isStudent = true;
+
+
+var_dump ($name);
+var_dump ($age);
+var_dump ($cgpa);
+var_dump ($isStudent);
+
+?>
+
+String Concatenation:
+<?php
+
+$first = "Asif";
+$last = " Mahmud";
+
+echo $first . $last;
+
+?>
+
+PHP Arithmetic Operators:
+<?php
+
+$a= 20;
+$b=6;
+
+echo $a + $b;
+echo "<br>";
+echo $a-$b;
+echo "<br>";
+echo $a*$b;
+echo "<br>";
+echo $a/$b;
+
+?>
+
+PHP Conditional Operators:
+
+PHP if:
+if($age>= 10)
+{
+echo "Excellent";
+
+}
+
+else {
+echo "Average";
+}
+
+PHP if...else:
+<?php
+$age = 30;
+if ($age < 10) {
+echo "You are a baby!";
+} elseif ($age > 10 and $age < 18) {
+echo "You are grown up!";
+} else {
+echo "You are an adult!";
+}
+?>
+
+PHP switch:
+<?php
+$favcolor = "red";
+switch($favcolor) {
+case "red":
+echo "Your favorite color is red!";
+break;
+case "blue":
+echo "Your favorite color is blue!";
+break;
+case "green":
+echo "Your favorite color is green!";
+break;
+default:
+echo "Your favorite color is neither red, blue, nor green!";
+}
+?>
+
+PHP Loops:
+
+while:
+<?php
+$i= 1;
+while($i<=5)
+{
+
+echo $i. "<br>";
+
+$i++;
+
+}
+
+?>
+
+
+PHP Functions:
+<?php
+function add($a, $b) {
+return $a + $b;
+}
+echo add(5, 5); // Output: 10
+?>
+
+(OOP) in PHP:
+
+<?php
+class Student {
+function __construct($id, $name) {
+$this->id = $id;
+$this->name = $name;
+}
+}
+$richard = new Student(100, "Richard");
+var_dump($richard); // object(Student)#1 (2) { ["id"]=> int(100) ["name"]=> string(7) "Richard" }
+?>

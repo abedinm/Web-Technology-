@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Life Saver Blood Donation Program">
+    <meta name="keywords" content="Blood Donation, Donor, Emergency Blood Request">
+    <meta name="author" content="Your Name">
+
+    <title>Life Saver Blood Donation Program</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Life Saver Blood Donation Program</h1>
+
+        <p>
+            Welcome to the Life Saver Blood Donation Program. Our mission is
+            to connect blood donors with patients in need. Register as a donor
+            or submit an emergency blood request through the forms below.
+        </p>
+    </header>
+
+    <main>
+
+
+
+        <section id="donor-section">
+
+            <article>
+
+                <h2>Blood Donor Registration Form</h2>
+
+                <form>
+
+                    <fieldset>
+
+                        <legend>Donor Information</legend>
+
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" required>
+
+                        <label for="age">Age</label>
+                        <input type="number" id="age" min="18" max="60" required>
+
+                        <label>Gender</label>
+
+                        <input type="radio" name="gender" id="male">
+                        <label for="male">Male</label>
+
+                        <input type="radio" name="gender" id="female">
+                        <label for="female">Female</label>
+
+                        <input type="radio" name="gender" id="other">
+                        <label for="other">Other</label>
+
+                        <br><br>
+
+                        <label for="blood">Blood Group</label>
+
+                        <select id="blood">
+
+                            <option>A+</option>
+                            <option>A-</option>
+                            <option>B+</option>
+                            <option>B-</option>
+                            <option>AB+</option>
+                            <option>AB-</option>
+                            <option>O+</option>
+                            <option>O-</option>
+
+                        </select>
+
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone">
+
+                        <label for="email">Email</label>
+                        <input type="email" id="email">
+
+                        <label for="address">Address</label>
+                        <textarea id="address"></textarea>
+
+                        <label for="donation">Last Donation Date</label>
+                        <input type="date" id="donation">
+
+                        <label for="health">Health Condition</label>
+                        <textarea id="health"></textarea>
+
+                    </fieldset>
+
+                    <input type="submit" value="Register">
+
+                    <input type="reset" value="Clear">
+
+                </form>
+
+            </article>
+
+        </section>
+
+
+
+        <section id="request-section">
+
+            <article>
+
+                <h2>Emergency Blood Request Form</h2>
+
+                <form>
+
+                    <fieldset>
+
+                        <legend>Patient Information</legend>
+
+                        <label for="patient">Patient Name</label>
+                        <input type="text" id="patient">
+
+                        <label for="requiredblood">Required Blood Group</label>
+
+                        <select id="requiredblood">
+
+                            <option>A+</option>
+                            <option>A-</option>
+                            <option>B+</option>
+                            <option>B-</option>
+                            <option>AB+</option>
+                            <option>AB-</option>
+                            <option>O+</option>
+                            <option>O-</option>
+
+                        </select>
+
+                        <label for="hospital">Hospital Name</label>
+                        <input type="text" id="hospital">
+
+                        <label for="contact">Emergency Contact Number</label>
+                        <input type="tel" id="contact">
+
+                        <label for="date">Required Date</label>
+                        <input type="date" id="date">
+
+                        <label for="message">Additional Message</label>
+                        <textarea id="message"></textarea>
+
+                    </fieldset>
+
+                    <input type="submit" value="Send Request">
+
+                    <input type="reset" value="Reset">
+
+                </form>
+
+            </article>
+
+        </section>
+
+
+
+        <section>
+
+            <article>
+
+                <h2>Available Blood Donors</h2>
+
+                <table>
+
+                    <tr>
+                        <th>Blood Group</th>
+                        <th>Registered Donors</th>
+                    </tr>
+
+                    <tr>
+                        <td>A+</td>
+                        <td>25</td>
+                    </tr>
+
+                    <tr>
+                        <td>A-</td>
+                        <td>8</td>
+                    </tr>
+
+                    <tr>
+                        <td>B+</td>
+                        <td>20</td>
+                    </tr>
+
+                    <tr>
+                        <td>B-</td>
+                        <td>7</td>
+                    </tr>
+
+                    <tr>
+                        <td>AB+</td>
+                        <td>10</td>
+                    </tr>
+
+                    <tr>
+                        <td>AB-</td>
+                        <td>4</td>
+                    </tr>
+
+                    <tr>
+                        <td>O+</td>
+                        <td>30</td>
+                    </tr>
+
+                    <tr>
+                        <td>O-</td>
+                        <td>6</td>
+                    </tr>
+
+                </table>
+
+            </article>
+
+        </section>
+
+    </main>
+
+    <footer>
+
+        <p>&copy; 2026 Life Saver Blood Donation Program. All Rights Reserved.</p>
+
+    </footer>
+
+</body>
+</html>

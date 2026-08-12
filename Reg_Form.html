@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+</head>
+<body>
+    <h2>Registration Form</h2>
+
+
+    <form action="#" method="post" >
+        <label for="fullname">Full Name:</label> <br>
+        <input type="text" id="fullname" name="fullname" placeholder="Enter your full name" required>
+        <br><br>
+
+        <label for="email">Email Address:</label> <br>
+        <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+        <br><br>
+
+        <label for ="number">Phone Number:</label> <br>
+        <input type="tel" id="password" name="password" placeholder="Enter your phone number" required>
+        <br><br>
+
+
+
+        <label>Gender:</label> <br>
+        <input type="radio" id="male" name="gender" value="male" required>
+        <label for="male">Male</label>
+        <input type="radio" id="female" name="gender" value="female" required>
+        <label for="female">Female</label>
+        <input type="radio" id="other" name="gender" value="other" required>
+        <label for="other">Other</label>
+        <br><br>
+
+        <label>Date of Birth</label> <br>
+        <input type="date" id="date" name="date"> <br><br>
+
+        <label for ="password">Password:</label> <br>
+        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+        <br><br>
+
+        <label for ="confirmPassword">Confirm Password:</label> <br>
+        <input type="password" id="confirmPassword" name="password" placeholder="Enter your password again" required>
+        <br><br>
+
+        <label for="address">Address:</label> <br>
+        <textarea id="address" name="address" rows="4" cols="300" placeholder="Write your address here."></textarea>
+        <br><br>
+
+
+
+        <label for="department">Department:</label> <br>
+        <select id="department"  name="department" required>
+
+            <option value="CSE">CSE</option>
+            <option value="EEE">EEE</option>
+            <option value="SE">SE</option>
+            <option value="IT">IT</option>
+        </select>
+        <br><br>
+
+        <input type="checkbox" id="agree" name="agree" value="agree">
+        <label for="agree">I agree to the Terms and Condition</label> <br><br>
+
+
+
+        <button type="submit">Register</button>
+
+        <button type="reset">Reset</button>
+
+    </form>
+
+
+
+
+
+</body>
+</html>

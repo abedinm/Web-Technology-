@@ -1,0 +1,192 @@
+
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+
+
+body{
+    background-color:#f4f4f4;
+    color:#333;
+    font-size:16px;
+    line-height:1.6;
+}
+
+
+
+#donor-section,
+#request-section{
+    background:white;
+    margin:20px auto;
+    padding:20px;
+    width:80%;
+    border:2px solid #ccc;
+}
+
+
+
+.button{
+    background:#2b71c0;
+    color:white;
+    padding:10px;
+}
+
+
+
+header{
+    background:#2b71c0;
+    color:white;
+    text-align:center;
+    padding:25px;
+}
+
+
+
+main{
+    padding:20px;
+}
+
+
+
+section{
+    margin-bottom:30px;
+}
+
+
+
+form{
+    display:block;
+}
+
+
+
+fieldset{
+    padding:20px;
+    border:2px solid #2b71c0;
+    margin-top:10px;
+}
+
+
+
+legend{
+    font-weight:bold;
+    color:#2b71c0;
+    padding:5px 10px;
+}
+
+
+
+label{
+    display:block;
+    margin-top:12px;
+    font-weight:bold;
+}
+
+
+
+input,
+select,
+textarea{
+    width:100%;
+    padding:10px;
+    margin-top:5px;
+    margin-bottom:10px;
+    border:1px solid #99999973;
+    outline:none;
+}
+
+
+
+input[type="radio"]{
+    width:auto;
+}
+
+
+
+input[type="submit"],
+input[type="reset"]{
+
+    background:#2b71c0;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    margin-top:15px;
+    width:auto;
+    cursor:pointer;
+
+}
+
+
+
+input[type="submit"]:hover,
+input[type="reset"]:hover{
+
+    background:#003a80;
+
+}
+
+
+
+table{
+
+    width:80%;
+    margin:auto;
+    border-collapse:collapse;
+    background:white;
+
+}
+
+table,
+th,
+td{
+
+    border:1px solid black;
+
+}
+
+th{
+
+    background:#ade2de;
+    color:white;
+    padding:12px;
+
+}
+
+td{
+
+    padding:10px;
+    text-align:center;
+
+}
+
+
+
+footer{
+
+    background:#222;
+    color:white;
+    text-align:center;
+    padding:15px;
+    margin-top:20px;
+
+}
+
+
+header{
+
+    position:relative;
+    z-index:1;
+
+}
+
+
+textarea{
+
+    overflow:auto;
+    resize:vertical;
+
+}
