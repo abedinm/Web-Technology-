@@ -2,36 +2,24 @@
 
 session_start();
 
-// Read the remembered Student ID from the cookie
-if (isset($_COOKIE["remember_student"])) {
+if (isset($_POST["login"])) {
 
-    $remembered = $_COOKIE["remember_student"];
+    $username = $_POST["username"];
 
-} else {
+    // Store username in session
+    $_SESSION["username"] = $username;
 
-    $remembered = "";
-
-}
-
-if (isset($_POST["next"])) {
-
-    // Store student information in session
-    $_SESSION["student_id"] = $_POST["student_id"];
-    $_SESSION["name"] = $_POST["name"];
-    $_SESSION["email"] = $_POST["email"];
-    $_SESSION["department"] = $_POST["department"];
-
-    // Create cookie if Remember Student ID is checked
+    // Create cookie if Remember Me is checked
     if (isset($_POST["remember"])) {
         setcookie(
-            "remember_student",
-            $_POST["student_id"],
+            "remember_user",
+            $username,
             time() + (86400 * 30),
             "/"
         );
     }
 
-    header("Location: academic.php");
+    header("Location: dashboard.php");
     exit();
 }
 
@@ -40,7 +28,7 @@ if (isset($_POST["next"])) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>University Portal Registration</title>
+    <title>Session and Cookie Demo</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -48,54 +36,28 @@ if (isset($_POST["next"])) {
 
 <div class="container">
 
-    <h2>Student Information</h2>
+    <h2>Login</h2>
 
     <form method="POST">
 
-        <label>Student ID</label>
+        <label>Username</label>
 
         <input
             type="text"
-            name="student_id"
-            value="<?php echo $remembered; ?>"
+            name="username"
             required
         >
-
-        <label>Full Name</label>
-
-        <input
-            type="text"
-            name="name"
-            required
-        >
-
-        <label>Email</label>
-
-        <input
-            type="text"
-            name="email"
-            required
-        >
-
-        <label>Department</label>
-
-        <select name="department">
-            <option value="CSE">CSE</option>
-            <option value="EEE">EEE</option>
-            <option value="SE">SE</option>
-            <option value="IT">IT</option>
-        </select>
 
         <label>
             <input
                 type="checkbox"
                 name="remember"
             >
-            Remember Student ID
+            Remember Me
         </label>
 
-        <button type="submit" name="next">
-            Next
+        <button type="submit" name="login">
+            Login
         </button>
 
     </form>
