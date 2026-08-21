@@ -1,0 +1,667 @@
+/* ============================================================
+   DoctorConnect - stylesheet
+   CSC 3215 Web Technologies | Group 6, Section F
+
+   Design decisions, so they can be explained:
+   - Type:    Figtree for headings, Source Sans 3 for text.
+              Both self-hosted in css/fonts, so the site does not
+              need an internet connection to look right.
+   - Colour:  a clinical teal, not a generic blue, on a warm
+              off-white page. Cold grey backgrounds make an
+              interface look unfinished.
+   - Surface: hairline borders instead of drop shadows. Shadows
+              on every box is the quickest way to look generic.
+   - Radius:  three values only - 12px panels, 7px controls,
+              999px pills. One value everywhere looks accidental.
+   - Layout:  a fixed sidebar, so the page is not one long
+              column of identical white cards.
+   ============================================================ */
+
+@import url("fonts/fonts.css");
+
+/* ---------- design tokens ----------
+   Every colour is named once here. Components use the variable,
+   never a raw hex, so the whole palette can change in one place. */
+:root {
+    --ink:        #12211f;   /* main text            */
+    --ink-2:      #45605c;   /* secondary text       */
+    --ink-3:      #7d938f;   /* labels, hints        */
+
+    --teal:       #0e5c55;   /* primary brand        */
+    --teal-dark:  #0a423d;
+    --teal-soft:  #e4f0ee;
+    --teal-line:  #bcd8d3;
+
+    --page:       #f6f5f1;   /* warm page background */
+    --surface:    #ffffff;
+    --line:       #e3e1da;   /* hairline border      */
+    --line-soft:  #efeee9;
+
+    --amber:      #9a6207;
+    --amber-soft: #fdf3e0;
+    --green:      #17694a;
+    --green-soft: #e3f2ea;
+    --red:        #9e2f2f;
+    --red-soft:   #fbeae8;
+
+    --r-panel: 12px;
+    --r-ctl:    7px;
+
+    --sidebar: 232px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+    background: var(--page);
+    color: var(--ink);
+    font-family: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+    font-size: 15.5px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, .logo, .stat-num {
+    font-family: "Figtree", "Segoe UI", system-ui, sans-serif;
+    letter-spacing: -0.015em;
+}
+
+a { color: var(--teal); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Icons inherit the text colour around them. */
+.ico { vertical-align: -0.18em; flex: 0 0 auto; }
+
+/* Keyboard users must always see where they are. */
+:focus-visible {
+    outline: 3px solid var(--teal);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* ============================================================
+   SHELL - sidebar + content
+   ============================================================ */
+
+.shell { display: flex; min-height: 100vh; }
+
+.sidebar {
+    width: var(--sidebar);
+    flex: 0 0 var(--sidebar);
+    background: var(--surface);
+    border-right: 1px solid var(--line);
+    padding: 22px 14px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 8px 18px;
+    color: var(--teal);
+}
+
+.brand .logo {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+}
+
+/* Small capitalised label - a typographic detail that separates
+   groups without needing another box. */
+.nav-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--ink-3);
+    padding: 0 10px;
+    margin: 16px 0 6px;
+}
+
+.navlinks { display: flex; flex-direction: column; gap: 1px; }
+
+.navlinks a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 10px;
+    border-radius: var(--r-ctl);
+    color: var(--ink-2);
+    font-size: 14.5px;
+    font-weight: 500;
+    transition: background .15s ease, color .15s ease;
+}
+
+.navlinks a:hover { background: var(--line-soft); color: var(--ink); text-decoration: none; }
+
+/* The current page is marked by a filled tint plus a left bar -
+   not by colour alone, which colour-blind users cannot see. */
+.navlinks a.on {
+    background: var(--teal-soft);
+    color: var(--teal-dark);
+    font-weight: 600;
+    box-shadow: inset 2.5px 0 0 var(--teal);
+}
+
+.side-foot {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid var(--line-soft);
+}
+
+.whoami { display: flex; align-items: center; gap: 9px; padding: 4px 8px 10px; }
+
+.avatar {
+    width: 32px; height: 32px; flex: 0 0 32px;
+    border-radius: 50%;
+    background: var(--teal-soft);
+    color: var(--teal-dark);
+    font-family: "Figtree", sans-serif;
+    font-size: 12.5px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+}
+
+.whoami-name { font-size: 13.5px; font-weight: 600; line-height: 1.25; }
+
+.btn-logout {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 10px;
+    border-radius: var(--r-ctl);
+    color: var(--ink-2);
+    font-size: 14px;
+}
+
+.btn-logout:hover { background: var(--red-soft); color: var(--red); text-decoration: none; }
+
+/* content column */
+.main { flex: 1; min-width: 0; }
+
+.container {
+    max-width: 980px;
+    padding: 34px 38px 70px;
+}
+
+/* logged-out pages have no sidebar */
+.plain-top {
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+    padding: 16px 0;
+}
+
+.plain-top .inner {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--teal);
+}
+
+.plain-top .tagline { margin-left: auto; font-size: 13px; color: var(--ink-3); }
+.plain-wrap { max-width: 980px; margin: 0 auto; padding: 34px 24px 70px; }
+
+/* ============================================================
+   PAGE HEADINGS
+   ============================================================ */
+
+.page-head { margin-bottom: 24px; }
+
+.page-head h1 {
+    font-size: 27px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.page-head p { color: var(--ink-2); font-size: 14.5px; margin-top: 3px; }
+
+.card h2 {
+    font-family: "Figtree", sans-serif;
+    font-size: 16.5px;
+    font-weight: 700;
+}
+
+.muted { color: var(--ink-3); font-size: 13.5px; margin-bottom: 16px; }
+.muted-inline { color: var(--ink-3); font-size: 13px; }
+
+/* ============================================================
+   PANELS
+   Hairline border, no shadow. The header strip is what gives a
+   panel structure - not a drop shadow.
+   ============================================================ */
+
+.card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-panel);
+    padding: 22px 24px;
+    margin-bottom: 18px;
+}
+
+.card.next { background: transparent; border-style: dashed; }
+
+/* ============================================================
+   STATS - a single strip, divided by hairlines.
+   Four separate boxes in a row is the stock dashboard look.
+   ============================================================ */
+
+.stat-row {
+    display: flex;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-panel);
+    margin-bottom: 18px;
+    overflow: hidden;
+    flex-wrap: wrap;
+}
+
+.stat {
+    flex: 1;
+    min-width: 128px;
+    padding: 16px 20px;
+    border-right: 1px solid var(--line-soft);
+}
+
+.stat:last-child { border-right: none; }
+
+.stat-num {
+    display: block;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.1;
+    /* tabular figures keep the columns aligned as numbers change */
+    font-variant-numeric: tabular-nums;
+}
+
+.stat-label {
+    display: block;
+    font-size: 10.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-3);
+    margin-top: 5px;
+}
+
+.stat-sub { display: block; font-size: 12.5px; color: var(--ink-3); }
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+
+.table-wrap { overflow-x: auto; }   /* stops wide tables breaking small screens */
+
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+
+th {
+    text-align: left;
+    font-size: 10.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-3);
+    padding: 0 14px 9px;
+    border-bottom: 1px solid var(--line);
+    white-space: nowrap;
+}
+
+td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--line-soft);
+    vertical-align: middle;
+}
+
+tr:last-child td { border-bottom: none; }
+tbody tr:hover td, table tr:hover td { background: #fbfaf7; }
+
+td:first-child, th:first-child { padding-left: 2px; }
+
+/* ============================================================
+   PILLS AND STATUS
+   Status carries a dot as well as colour, so the meaning does
+   not depend on colour alone.
+   ============================================================ */
+
+.pill {
+    display: inline-block;
+    background: var(--teal-soft);
+    color: var(--teal-dark);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 3px 11px 3px 9px;
+    border-radius: 999px;
+    text-transform: capitalize;
+}
+
+.status::before {
+    content: "";
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.status-pending   { background: var(--amber-soft); color: var(--amber); }
+.status-confirmed { background: var(--teal-soft);  color: var(--teal-dark); }
+.status-completed { background: var(--green-soft); color: var(--green); }
+.status-cancelled { background: #f0efea;           color: var(--ink-3); }
+
+.role {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.role-admin   { background: #efe9f6; color: #5b3d80; }
+.role-doctor  { background: var(--teal-soft); color: var(--teal-dark); }
+.role-patient { background: var(--green-soft); color: var(--green); }
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--teal);
+    color: #fff;
+    border: 1px solid var(--teal);
+    border-radius: var(--r-ctl);
+    padding: 9px 17px;
+    font-family: inherit;
+    font-size: 14.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s ease, border-color .15s ease;
+}
+
+.btn:hover { background: var(--teal-dark); border-color: var(--teal-dark); text-decoration: none; color: #fff; }
+
+.btn-small { padding: 6px 12px; font-size: 13px; }
+.btn-big   { padding: 12px 26px; font-size: 15.5px; }
+.btn-block { width: 100%; justify-content: center; margin-top: 10px; }
+
+.btn-ghost {
+    background: var(--surface);
+    color: var(--ink-2);
+    border-color: var(--line);
+}
+.btn-ghost:hover { background: var(--line-soft); color: var(--ink); border-color: var(--line); }
+
+.btn-danger { background: var(--red); border-color: var(--red); }
+.btn-danger:hover { background: #7d2424; border-color: #7d2424; }
+
+.btn-ok { background: var(--green); border-color: var(--green); }
+.btn-ok:hover { background: #10513a; border-color: #10513a; }
+
+/* ============================================================
+   FORMS
+   ============================================================ */
+
+label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-2);
+    margin: 16px 0 6px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="date"],
+select {
+    width: 100%;
+    padding: 10px 12px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-ctl);
+    font-family: inherit;
+    font-size: 15px;
+    color: var(--ink);
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+input:hover, select:hover { border-color: #cfccc2; }
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px var(--teal-soft);
+}
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }
+
+.search-form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Only draw the divider when a results table actually follows the
+   search bar - otherwise it leaves a rule with nothing under it. */
+.search-form:not(:last-child) {
+    padding-bottom: 18px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid var(--line-soft);
+}
+
+.search-form input, .search-form select { width: auto; flex: 1; min-width: 145px; }
+.search-form .btn { flex: 0 0 auto; }
+
+.inline-form { display: inline-block; }
+
+.hint { display: block; font-size: 12.5px; color: var(--ink-3); margin-top: 6px; }
+
+.field-error {
+    display: block;
+    color: var(--red);
+    font-size: 13px;
+    min-height: 15px;
+    margin-top: 5px;
+}
+
+/* ============================================================
+   ALERTS - an icon as well as a colour
+   ============================================================ */
+
+.alert-ok, .alert-error, .status-ok {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 13px 16px;
+    border-radius: var(--r-ctl);
+    margin-bottom: 20px;
+    font-size: 14.5px;
+    border: 1px solid;
+}
+
+.alert-ok, .status-ok { background: var(--green-soft); border-color: #bfdccd; color: #114e37; }
+.alert-error { background: var(--red-soft); border-color: #efc9c4; color: #7d2424; }
+
+/* ============================================================
+   AUTH PAGES
+   ============================================================ */
+
+.auth-wrap { display: flex; justify-content: center; padding: 26px 0; }
+.auth-card { width: 420px; max-width: 100%; padding: 30px 30px 26px; }
+.auth-card h1 { font-family: "Figtree", sans-serif; font-size: 22px; font-weight: 700; }
+.auth-alt { text-align: center; font-size: 14px; color: var(--ink-2); margin-top: 18px; }
+
+.demo-box {
+    margin-top: 20px;
+    padding: 13px 15px;
+    background: var(--page);
+    border: 1px solid var(--line);
+    border-radius: var(--r-ctl);
+    font-size: 13px;
+    color: var(--ink-2);
+    line-height: 1.75;
+}
+
+.demo-box code {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-family: ui-monospace, Consolas, monospace;
+    font-size: 12.5px;
+}
+
+code {
+    background: var(--line-soft);
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-family: ui-monospace, Consolas, monospace;
+    font-size: 13px;
+    color: var(--teal-dark);
+}
+
+/* ============================================================
+   LANDING PAGE
+   ============================================================ */
+
+.hero {
+    background: var(--teal);
+    color: #fff;
+    border-radius: 16px;
+    padding: 46px 40px;
+    margin-bottom: 20px;
+    /* one subtle detail rather than a loud gradient */
+    background-image: radial-gradient(circle at 88% 12%, rgba(255,255,255,.09), transparent 42%);
+}
+
+.hero h1 {
+    font-family: "Figtree", sans-serif;
+    font-size: 34px;
+    font-weight: 800;
+    line-height: 1.15;
+    max-width: 15ch;
+    letter-spacing: -0.025em;
+}
+
+.hero p { color: #cfe6e2; font-size: 16px; max-width: 54ch; margin-top: 12px; }
+.hero-actions { display: flex; gap: 11px; margin-top: 26px; flex-wrap: wrap; }
+
+.hero .btn { background: #fff; color: var(--teal-dark); border-color: #fff; }
+.hero .btn:hover { background: #e7f2f0; border-color: #e7f2f0; }
+.hero .btn-ghost { background: transparent; color: #fff; border-color: rgba(255,255,255,.42); }
+.hero .btn-ghost:hover { background: rgba(255,255,255,.12); color: #fff; }
+
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(196px, 1fr)); gap: 1px; background: var(--line-soft); border: 1px solid var(--line-soft); border-radius: var(--r-ctl); overflow: hidden; }
+.step { background: var(--surface); padding: 16px 18px; font-size: 14px; }
+
+.step-n {
+    display: block;
+    font-family: "Figtree", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--teal);
+    margin-bottom: 5px;
+}
+
+/* ============================================================
+   DOCTOR CARDS
+   ============================================================ */
+
+.doctor-card { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; padding: 18px 22px; }
+.doctor-card:hover { border-color: var(--teal-line); }
+
+.doctor-avatar {
+    width: 50px; height: 50px; flex: 0 0 50px;
+    border-radius: 14px;              /* squircle, not another circle */
+    background: var(--teal-soft);
+    color: var(--teal-dark);
+    font-family: "Figtree", sans-serif;
+    font-size: 17px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+}
+
+.doctor-info { flex: 1; min-width: 210px; }
+
+.doctor-info h3 {
+    font-family: "Figtree", sans-serif;
+    font-size: 16.5px;
+    font-weight: 700;
+    margin-bottom: 3px;
+}
+
+.doctor-meta { font-size: 13.5px; color: var(--ink-2); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.doctor-action { flex: 0 0 auto; }
+
+/* ============================================================
+   MISC
+   ============================================================ */
+
+.empty { color: var(--ink-3); font-size: 14.5px; padding: 26px 0; text-align: center; }
+.mt { margin-top: 16px; }
+
+.footer {
+    color: var(--ink-3);
+    font-size: 12.5px;
+    padding: 22px 0 34px;
+    border-top: 1px solid var(--line);
+    margin-top: 34px;
+}
+
+/* ============================================================
+   RESPONSIVE - the sidebar becomes a top strip on small screens
+   ============================================================ */
+
+@media (max-width: 860px) {
+    .shell { flex-direction: column; }
+
+    .sidebar {
+        width: 100%;
+        flex: none;
+        height: auto;
+        position: static;
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+        padding: 14px 16px;
+    }
+
+    .nav-label { display: none; }
+    .navlinks { flex-direction: row; flex-wrap: wrap; gap: 4px; }
+    .navlinks a { padding: 7px 12px; font-size: 13.5px; }
+    .navlinks a.on { box-shadow: none; }
+
+    .side-foot { margin-top: 12px; display: flex; align-items: center; gap: 12px; }
+    .whoami { padding: 0; }
+
+    .container { padding: 22px 18px 50px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .hero { padding: 30px 22px; }
+    .hero h1 { font-size: 25px; max-width: none; }
+    .stat-row { flex-direction: column; }
+    .stat { border-right: none; border-bottom: 1px solid var(--line-soft); }
+    .stat:last-child { border-bottom: none; }
+}
+
+/* Users who ask their system for less motion get none. */
+@media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+}
