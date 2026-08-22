@@ -11,6 +11,18 @@
 // printed, because session_start() has to run before any output.
 // ============================================================
 
+// Harden the session cookie BEFORE the session starts - these settings
+// have no effect if they are applied afterwards.
+//   httponly : JavaScript cannot read the cookie, so a cross-site
+//              scripting bug cannot steal the session id
+//   samesite : the browser does not send the cookie when the request
+//              comes from another site, which blocks CSRF
+session_set_cookie_params(array(
+    "httponly" => true,
+    "samesite" => "Lax",
+    "path"     => "/",
+));
+
 session_start();
 
 include_once "db.php";
