@@ -47,6 +47,11 @@ mysqli_query($conn, "CREATE DATABASE IF NOT EXISTS $dbName");
 // that follows.
 mysqli_select_db($conn, $dbName);
 
+// Tell MySQL that everything we send and receive is utf8mb4.
+// Without this the connection falls back to Latin-1 and any name
+// with a Bangla letter or an accent is stored as broken characters.
+mysqli_set_charset($conn, "utf8mb4");
+
 
 // ---------- STEP 3: create the four tables ----------
 // These four tables are the ER diagram from our proposal.
@@ -109,6 +114,20 @@ $appointmentsTable = "CREATE TABLE IF NOT EXISTS appointments (
     FOREIGN KEY (doctor_id)  REFERENCES doctors(doctor_id)
 )";
 mysqli_query($conn, $appointmentsTable);
+
+
+// ---------- indexes ----------
+// Two queries run constantly: the doctor's list for one day, and the
+// check that a slot is not already taken. Both search appointments by
+// doctor and date, so an index on that pair lets MySQL jump straight
+// to the matching rows instead of reading the whole table.
+// IF NOT EXISTS keeps this safe to run on every page load.
+mysqli_query($conn, "CREATE INDEX IF NOT EXISTS idx_doctor_date
+                     ON appointments (doctor_id, appt_date)");
+
+// The patient's own appointment list is filtered by patient_id.
+mysqli_query($conn, "CREATE INDEX IF NOT EXISTS idx_patient
+                     ON appointments (patient_id)");
 
 
 // ---------- STEP 4: sample data, first run only ----------
