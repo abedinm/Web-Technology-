@@ -39,6 +39,12 @@ if (isset($_POST["submit"])) {
         // stored hash. We never store or compare the real password.
         if ($user && password_verify($password, $user["password"])) {
 
+            // Give the session a brand new id now that the user has
+            // proved who they are. If somebody managed to fix a known
+            // session id on this browser beforehand, that id is now
+            // worthless - this is the defence against session fixation.
+            session_regenerate_id(true);
+
             // Remember who they are for every later page.
             $_SESSION["user_id"]   = $user["user_id"];
             $_SESSION["full_name"] = $user["full_name"];
