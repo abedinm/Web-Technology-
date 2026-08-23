@@ -23,7 +23,11 @@
 // On XAMPP the default user is "root" with an empty password.
 // No database name yet - we may still need to create it.
 
-$host     = "localhost";
+// "127.0.0.1" forces a TCP connection on port 3306. "localhost" makes
+// PHP use a unix socket file instead, and on macOS that file is in a
+// different place for XAMPP than for a Homebrew MySQL, which gives a
+// "No such file or directory" error. TCP works with either server.
+$host     = "127.0.0.1";
 $user     = "root";
 $password = "";
 $dbName   = "doctorconnect_db";
@@ -145,12 +149,31 @@ if ($roleCol) {
 // doctor and date, so an index on that pair lets MySQL jump straight
 // to the matching rows instead of reading the whole table.
 // IF NOT EXISTS keeps this safe to run on every page load.
-mysqli_query($conn, "CREATE INDEX IF NOT EXISTS idx_doctor_date
-                     ON appointments (doctor_id, appt_date)");
+// MariaDB, which XAMPP ships, understands CREATE INDEX IF NOT EXISTS.
+// Plain MySQL does not, so we ask information_schema whether the index
+// is already there and only create it when it is missing. The table and
+// index names below are fixed text in this file, never user input.
+function ensure_index($conn, $table, $indexName, $columns) {
+
+    $stmt = mysqli_prepare($conn,
+        "SELECT COUNT(*) AS total FROM information_schema.STATISTICS
+         WHERE TABLE_SCHEMA = DATABASE()
+           AND TABLE_NAME   = ?
+           AND INDEX_NAME   = ?");
+    mysqli_stmt_bind_param($stmt, "ss", $table, $indexName);
+    mysqli_stmt_execute($stmt);
+    $row = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
+    mysqli_stmt_close($stmt);
+
+    if ($row && $row["total"] == 0) {
+        mysqli_query($conn, "CREATE INDEX $indexName ON $table ($columns)");
+    }
+}
+
+ensure_index($conn, "appointments", "idx_doctor_date", "doctor_id, appt_date");
 
 // The patient's own appointment list is filtered by patient_id.
-mysqli_query($conn, "CREATE INDEX IF NOT EXISTS idx_patient
-                     ON appointments (patient_id)");
+ensure_index($conn, "appointments", "idx_patient", "patient_id");
 
 
 // ---------- STEP 4: sample data, first run only ----------
