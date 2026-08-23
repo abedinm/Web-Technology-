@@ -62,6 +62,8 @@ function dashboard_for($role) {
         return "admin_dashboard.php";
     } elseif ($role == "doctor") {
         return "doctor_dashboard.php";
+    } elseif ($role == "receptionist") {
+        return "reception_dashboard.php";
     } else {
         return "patient_dashboard.php";
     }
