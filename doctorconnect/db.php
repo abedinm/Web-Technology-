@@ -204,6 +204,29 @@ if ($row["total"] == 0) {
         (6, 3, '2026-08-26', '4:30 PM - 5:00 PM', 'pending')");
 }
 
+// ---------- STEP 5: the front desk account ----------
+// Kept outside the first-run block above so that a database which was
+// created before this role existed also gets its receptionist. The
+// count is 0 only once; afterwards this block does nothing.
+$recCheck = mysqli_query($conn, "SELECT COUNT(*) AS total FROM users WHERE role = 'receptionist'");
+$recRow   = mysqli_fetch_assoc($recCheck);
+
+if ($recRow && $recRow["total"] == 0) {
+
+    $recHash  = password_hash("1234", PASSWORD_DEFAULT);
+    $recName  = "Front Desk";
+    $recEmail = "reception@doctorconnect.com";
+    $recPhone = "01766666666";
+
+    $stmt = mysqli_prepare($conn,
+        "INSERT INTO users (full_name, email, password, phone, role)
+         VALUES (?, ?, ?, ?, 'receptionist')");
+    mysqli_stmt_bind_param($stmt, "ssss", $recName, $recEmail, $recHash, $recPhone);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
+}
+
+
 // NOTE: there is deliberately no echo in this file. db.php is
 // included at the top of every page, so anything printed here
 // would appear above the <!DOCTYPE html> line and would break
