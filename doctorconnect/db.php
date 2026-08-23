@@ -113,6 +113,8 @@ $appointmentsTable = "CREATE TABLE IF NOT EXISTS appointments (
     appt_date  DATE NOT NULL,
     time_slot  VARCHAR(30) NOT NULL,
     status     ENUM('pending','confirmed','completed','cancelled') NOT NULL DEFAULT 'pending',
+    diagnosis  VARCHAR(120) DEFAULT NULL,
+    visit_note TEXT         DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (patient_id) REFERENCES users(user_id),
     FOREIGN KEY (doctor_id)  REFERENCES doctors(doctor_id)
@@ -149,6 +151,30 @@ if ($roleCol) {
 // doctor and date, so an index on that pair lets MySQL jump straight
 // to the matching rows instead of reading the whole table.
 // IF NOT EXISTS keeps this safe to run on every page load.
+// Adds a column only when it is missing, so a database created before
+// the doctor's visit notes existed is brought up to date on the next
+// page load instead of having to be dropped and rebuilt.
+function ensure_column($conn, $table, $column, $definition) {
+
+    $stmt = mysqli_prepare($conn,
+        "SELECT COUNT(*) AS total FROM information_schema.COLUMNS
+         WHERE TABLE_SCHEMA = DATABASE()
+           AND TABLE_NAME   = ?
+           AND COLUMN_NAME  = ?");
+    mysqli_stmt_bind_param($stmt, "ss", $table, $column);
+    mysqli_stmt_execute($stmt);
+    $row = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
+    mysqli_stmt_close($stmt);
+
+    if ($row && $row["total"] == 0) {
+        mysqli_query($conn, "ALTER TABLE $table ADD COLUMN $column $definition");
+    }
+}
+
+ensure_column($conn, "appointments", "diagnosis",  "VARCHAR(120) DEFAULT NULL");
+ensure_column($conn, "appointments", "visit_note", "TEXT DEFAULT NULL");
+
+
 // MariaDB, which XAMPP ships, understands CREATE INDEX IF NOT EXISTS.
 // Plain MySQL does not, so we ask information_schema whether the index
 // is already there and only create it when it is missing. The table and
