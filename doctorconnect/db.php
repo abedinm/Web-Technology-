@@ -70,7 +70,7 @@ $usersTable = "CREATE TABLE IF NOT EXISTS users (
     email      VARCHAR(80)  NOT NULL UNIQUE,
     password   VARCHAR(255) NOT NULL,
     phone      VARCHAR(20),
-    role       ENUM('patient','doctor','admin') NOT NULL DEFAULT 'patient',
+    role       ENUM('patient','doctor','receptionist','admin') NOT NULL DEFAULT 'patient',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )";
 mysqli_query($conn, $usersTable);
@@ -114,6 +114,29 @@ $appointmentsTable = "CREATE TABLE IF NOT EXISTS appointments (
     FOREIGN KEY (doctor_id)  REFERENCES doctors(doctor_id)
 )";
 mysqli_query($conn, $appointmentsTable);
+
+
+// ---------- STEP 3b: widen the role column ----------
+// Databases created before the receptionist role existed still have
+// the old three-value ENUM. information_schema reports the current
+// definition; if 'receptionist' is missing we widen the column. On a
+// database that already has it nothing changes, so this is safe to
+// run on every page load, exactly like the CREATE TABLE IF NOT EXISTS
+// statements above.
+$roleCol = mysqli_query($conn,
+    "SELECT COLUMN_TYPE FROM information_schema.COLUMNS
+     WHERE TABLE_SCHEMA = DATABASE()
+       AND TABLE_NAME   = 'users'
+       AND COLUMN_NAME  = 'role'");
+
+if ($roleCol) {
+    $roleDef = mysqli_fetch_assoc($roleCol);
+    if ($roleDef && strpos($roleDef["COLUMN_TYPE"], "receptionist") === false) {
+        mysqli_query($conn, "ALTER TABLE users MODIFY role
+            ENUM('patient','doctor','receptionist','admin')
+            NOT NULL DEFAULT 'patient'");
+    }
+}
 
 
 // ---------- indexes ----------
