@@ -377,6 +377,7 @@ td:first-child, th:first-child { padding-left: 2px; }
 .role-admin   { background: #efe9f6; color: #5b3d80; }
 .role-doctor  { background: var(--teal-soft); color: var(--teal-dark); }
 .role-patient { background: var(--green-soft); color: var(--green); }
+.role-receptionist { background: #fdeee0; color: #9a5b12; }
 
 /* ============================================================
    BUTTONS

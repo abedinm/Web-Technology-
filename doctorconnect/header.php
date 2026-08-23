@@ -44,7 +44,15 @@ function navlink($file, $label, $iconName, $here) {
             <span class="logo">DoctorConnect</span>
         </a>
 
-        <div class="nav-label"><?php echo $role == "admin" ? "Administration" : "Menu"; ?></div>
+        <div class="nav-label"><?php
+            if ($role == "admin") {
+                echo "Administration";
+            } elseif ($role == "receptionist") {
+                echo "Front desk";
+            } else {
+                echo "Menu";
+            }
+        ?></div>
         <div class="navlinks">
             <?php
             if ($role == "patient") {
@@ -55,6 +63,11 @@ function navlink($file, $label, $iconName, $here) {
             } elseif ($role == "doctor") {
                 navlink("doctor_dashboard.php",  "Appointments",    "calendar",     $here);
                 navlink("doctor_profile.php",    "My Profile",      "stethoscope",  $here);
+
+            } elseif ($role == "receptionist") {
+                navlink("reception_dashboard.php", "Front Desk",    "clock",    $here);
+                navlink("walkin.php",              "Book Walk-in",  "plus",     $here);
+                navlink("doctors.php",             "Doctors",       "search",   $here);
 
             } elseif ($role == "admin") {
                 navlink("admin_dashboard.php",     "Overview",    "grid",     $here);
