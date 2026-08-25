@@ -1,9 +1,10 @@
 <?php
 // ============================================================
-// doctor_profile.php - UPDATE MY DETAILS  (Doctor feature 2)
-// The doctor edits their specialization, consultation fee and
-// available time. This is a classic UPDATE form: load the row,
-// show it in the fields, save the changes back.
+// doctor_profile.php - THE DOCTOR'S OWN DETAILS
+//
+// A doctor may change their specialization, consultation fee and
+// visiting hours. The department is set by the admin, so it is
+// shown here but cannot be edited.
 // ============================================================
 include "auth.php";
 require_role("doctor");
@@ -13,121 +14,108 @@ $doctor = current_doctor($conn);
 if (!$doctor) {
     $pageTitle = "My Profile";
     include "header.php";
-    echo '<div class="card"><p class="empty">Your doctor profile has not been set up yet.</p></div>';
+    echo '<div class="alert-error">Your doctor profile has not been set up yet.</div>';
     include "footer.php";
     exit();
 }
 
-$message = "";
 $error   = "";
+$message = "";
+
+$specialization = $doctor["specialization"];
+$fee            = $doctor["consultation_fee"];
+$available      = $doctor["available_time"];
+$room           = $doctor["room"];
 
 if (isset($_POST["submit"])) {
 
-    $spec = test_input($_POST["specialization"]);
-    $fee  = test_input($_POST["consultation_fee"]);
-    $time = test_input($_POST["available_time"]);
-    $dept = intval($_POST["dept_id"]);
+    $specialization = test_input($_POST["specialization"]);
+    $available      = test_input($_POST["available_time"]);
+    $room           = test_input($_POST["room"]);
+    $fee            = $_POST["consultation_fee"];
 
-    if ($spec == "" || $time == "") {
-        $error = "Specialization and available time are required.";
+    if ($specialization == "" || $available == "") {
+        $error = "Specialization and visiting hours cannot be empty.";
 
     } elseif (!is_numeric($fee) || $fee < 0) {
-        // is_numeric checks the text is a number - the fee box is a
-        // text field, so a patient-facing price could otherwise be "abc".
-        $error = "Consultation fee must be a number.";
+        $error = "The consultation fee must be a number.";
 
     } else {
-        // "d" in bind_param means double (a decimal number).
+        $fee = (float) $fee;
+
         $stmt = mysqli_prepare($conn,
             "UPDATE doctors
-             SET specialization = ?, consultation_fee = ?, available_time = ?, dept_id = ?
+             SET specialization = ?, consultation_fee = ?, available_time = ?, room = ?
              WHERE doctor_id = ?");
-        mysqli_stmt_bind_param($stmt, "sdsii", $spec, $fee, $time, $dept, $doctor["doctor_id"]);
-        mysqli_stmt_execute($stmt);
-        mysqli_stmt_close($stmt);
+        mysqli_stmt_bind_param($stmt, "sdssi", $specialization, $fee, $available, $room, $doctor["doctor_id"]);
 
-        $message = "Your profile has been updated.";
-        $doctor  = current_doctor($conn);   // reload so the form shows the new values
+        if (mysqli_stmt_execute($stmt)) {
+            $message = "Your profile has been updated.";
+        } else {
+            $error = "Could not save your profile.";
+        }
+        mysqli_stmt_close($stmt);
     }
 }
 
-$deptList = mysqli_query($conn, "SELECT * FROM departments ORDER BY dept_name");
+// The department name lives in its own table.
+$stmt = mysqli_prepare($conn, "SELECT dept_name FROM departments WHERE dept_id = ?");
+mysqli_stmt_bind_param($stmt, "i", $doctor["dept_id"]);
+mysqli_stmt_execute($stmt);
+$dept = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
+mysqli_stmt_close($stmt);
 
 $pageTitle = "My Profile";
 include "header.php";
 ?>
 
 <div class="page-head">
-    <h1>My profile</h1>
-    <p>Patients see this information when they search for a doctor.</p>
+    <div>
+        <h1>My profile</h1>
+        <p class="muted">Patients see these details when they search for a doctor.</p>
+    </div>
 </div>
 
-<?php if ($message != ""): ?><div class="alert-ok"><?php echo $message; ?></div><?php endif; ?>
-<?php if ($error   != ""): ?><div class="alert-error"><?php echo $error; ?></div><?php endif; ?>
+<?php if ($message != ""): ?>
+    <div class="alert-ok"><?php echo $message; ?></div>
+<?php endif; ?>
 
-<div class="card">
-    <h2>Account details</h2>
-    <p class="muted">Your name and email are managed under Account.</p>
-    <div class="table-wrap">
-        <table>
-        <tr><th>Name</th><td><?php echo $_SESSION["full_name"]; ?></td></tr>
-        <tr><th>Role</th><td><span class="role role-doctor">doctor</span></td></tr>
-    </table>
+<?php if ($error != ""): ?>
+    <div class="alert-error"><?php echo $error; ?></div>
+<?php endif; ?>
+
+<form method="POST" class="card">
+
+    <label>Department</label>
+    <p><span class="pill"><?php echo $dept ? $dept["dept_name"] : "Not assigned"; ?></span>
+       <span class="muted-inline">set by the admin</span></p>
+
+    <label for="specialization">Specialization</label>
+    <input type="text" id="specialization" name="specialization"
+           value="<?php echo $specialization; ?>"
+           placeholder="e.g. Heart Specialist, MBBS, MD">
+
+    <div class="form-grid">
+        <div>
+            <label for="consultation_fee">Consultation fee (Tk)</label>
+            <input type="number" id="consultation_fee" name="consultation_fee"
+                   step="1" min="0" value="<?php echo $fee; ?>">
         </div>
-</div>
+        <div>
+            <label for="available_time">Visiting hours</label>
+            <input type="text" id="available_time" name="available_time"
+                   value="<?php echo $available; ?>"
+                   placeholder="e.g. Sun-Thu, 5 PM - 8 PM">
+        </div>
+    </div>
 
-<div class="card">
-    <h2>Professional details</h2>
+    <label for="room">Room</label>
+    <input type="text" id="room" name="room" maxlength="20"
+           value="<?php echo $room; ?>"
+           placeholder="e.g. 304, 3rd floor">
 
-    <form method="post" action="doctor_profile.php" onsubmit="return checkProfile()">
+    <input type="submit" name="submit" value="Save changes" class="btn btn-block">
 
-        <label for="dept_id">Department</label>
-        <select id="dept_id" name="dept_id">
-            <?php while ($d = mysqli_fetch_assoc($deptList)): ?>
-                <option value="<?php echo $d["dept_id"]; ?>"
-                    <?php echo ($doctor["dept_id"] == $d["dept_id"]) ? "selected" : ""; ?>>
-                    <?php echo $d["dept_name"]; ?>
-                </option>
-            <?php endwhile; ?>
-        </select>
-
-        <label for="specialization">Specialization / qualifications</label>
-        <input type="text" id="specialization" name="specialization"
-               value="<?php echo $doctor["specialization"]; ?>">
-
-        <label for="consultation_fee">Consultation fee (Tk)</label>
-        <input type="text" id="consultation_fee" name="consultation_fee"
-               value="<?php echo $doctor["consultation_fee"]; ?>">
-
-        <label for="available_time">Available time</label>
-        <input type="text" id="available_time" name="available_time"
-               value="<?php echo $doctor["available_time"]; ?>"
-               placeholder="e.g. Sun-Thu, 5 PM - 8 PM">
-
-        <span class="field-error" id="jsError"></span>
-
-        <input type="submit" name="submit" value="Save changes" class="btn">
-    </form>
-</div>
-
-<script>
-function checkProfile() {
-    var spec = document.getElementById("specialization").value;
-    var fee  = document.getElementById("consultation_fee").value;
-    var time = document.getElementById("available_time").value;
-    var box  = document.getElementById("jsError");
-
-    if (spec == "" || time == "") {
-        box.innerHTML = "Specialization and available time cannot be empty.";
-        return false;
-    }
-    // isNaN means "is not a number" - it catches a fee typed as text.
-    if (fee == "" || isNaN(fee)) {
-        box.innerHTML = "Fee must be a number.";
-        return false;
-    }
-    return true;
-}
-</script>
+</form>
 
 <?php include "footer.php"; ?>
