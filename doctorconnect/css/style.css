@@ -666,3 +666,7 @@ code {
 @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; animation: none !important; }
 }
+
+/* buttons that sit side by side, including a one-button form */
+.row-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.row-actions form { margin: 0; }
