@@ -98,6 +98,7 @@ $doctorsTable = "CREATE TABLE IF NOT EXISTS doctors (
     specialization   VARCHAR(80),
     consultation_fee DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     available_time   VARCHAR(60),
+    room             VARCHAR(20) DEFAULT NULL,
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (dept_id) REFERENCES departments(dept_id)
 )";
@@ -173,6 +174,7 @@ function ensure_column($conn, $table, $column, $definition) {
 
 ensure_column($conn, "appointments", "diagnosis",  "VARCHAR(120) DEFAULT NULL");
 ensure_column($conn, "appointments", "visit_note", "TEXT DEFAULT NULL");
+ensure_column($conn, "doctors",      "room",       "VARCHAR(20) DEFAULT NULL");
 
 
 // MariaDB, which XAMPP ships, understands CREATE INDEX IF NOT EXISTS.
@@ -241,10 +243,10 @@ if ($row["total"] == 0) {
 
     // Doctors: user_id 2, 3 and 4 from the table above.
     mysqli_query($conn, "INSERT INTO doctors
-        (doctor_id, user_id, dept_id, specialization, consultation_fee, available_time) VALUES
-        (1, 2, 1, 'Heart Specialist, MBBS, MD',      800.00, 'Sun-Thu, 5 PM - 8 PM'),
-        (2, 3, 1, 'Cardiology, MBBS',                600.00, 'Sat-Wed, 6 PM - 9 PM'),
-        (3, 4, 3, 'Orthopedic Surgeon, MBBS, FCPS', 1000.00, 'Fri, 4 PM - 7 PM')");
+        (doctor_id, user_id, dept_id, specialization, consultation_fee, available_time, room) VALUES
+        (1, 2, 1, 'Heart Specialist, MBBS, MD',      800.00, 'Sun-Thu, 5 PM - 8 PM', '304'),
+        (2, 3, 1, 'Cardiology, MBBS',                600.00, 'Sat-Wed, 6 PM - 9 PM', '306'),
+        (3, 4, 3, 'Orthopedic Surgeon, MBBS, FCPS', 1000.00, 'Fri, 4 PM - 7 PM',     '210')");
 
     // A couple of example bookings so the tables are not empty.
     mysqli_query($conn, "INSERT INTO appointments

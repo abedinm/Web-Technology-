@@ -40,7 +40,7 @@ $deptCount  = $deptRow["total"];
 // are filtered out. LIMIT 1 takes the soonest one.
 $stmt = mysqli_prepare($conn,
     "SELECT a.appt_id, a.appt_date, a.time_slot, a.status,
-            u.full_name AS doctor_name, dep.dept_name, d.consultation_fee
+            u.full_name AS doctor_name, dep.dept_name, d.consultation_fee, d.room
      FROM appointments a
      JOIN doctors d       ON a.doctor_id = d.doctor_id
      JOIN users u         ON d.user_id   = u.user_id
@@ -120,6 +120,9 @@ include "header.php";
         <p class="muted">
             <?php echo date("l, d M Y", strtotime($next["appt_date"])); ?>
             &middot; <?php echo $next["time_slot"]; ?>
+            <?php if ($next["room"] != ""): ?>
+                &middot; Room <?php echo $next["room"]; ?>
+            <?php endif; ?>
             &middot; Fee <?php echo number_format($next["consultation_fee"], 0); ?> Tk
             &middot; <span class="status status-<?php echo $next["status"]; ?>"><?php echo $next["status"]; ?></span>
         </p>

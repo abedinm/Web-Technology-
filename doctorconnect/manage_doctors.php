@@ -23,6 +23,7 @@ if (isset($_POST["add"])) {
     $spec  = test_input($_POST["specialization"]);
     $fee   = $_POST["consultation_fee"];
     $time  = test_input($_POST["available_time"]);
+    $room  = test_input($_POST["room"]);
     $pass  = $_POST["password"];
 
     if ($name == "" || $email == "" || $pass == "" || $deptId == 0) {
@@ -61,9 +62,9 @@ if (isset($_POST["add"])) {
 
                 $fee = (float) $fee;
                 $stmt = mysqli_prepare($conn,
-                    "INSERT INTO doctors (user_id, dept_id, specialization, consultation_fee, available_time)
-                     VALUES (?, ?, ?, ?, ?)");
-                mysqli_stmt_bind_param($stmt, "iisds", $newUserId, $deptId, $spec, $fee, $time);
+                    "INSERT INTO doctors (user_id, dept_id, specialization, consultation_fee, available_time, room)
+                     VALUES (?, ?, ?, ?, ?, ?)");
+                mysqli_stmt_bind_param($stmt, "iisdss", $newUserId, $deptId, $spec, $fee, $time, $room);
                 mysqli_stmt_execute($stmt);
                 mysqli_stmt_close($stmt);
 
@@ -84,15 +85,16 @@ if (isset($_POST["update"])) {
     $spec     = test_input($_POST["specialization"]);
     $fee      = $_POST["consultation_fee"];
     $time     = test_input($_POST["available_time"]);
+    $room     = test_input($_POST["room"]);
 
     if (!is_numeric($fee) || $fee < 0) {
         $error = "The consultation fee must be a number.";
     } else {
         $fee = (float) $fee;
         $stmt = mysqli_prepare($conn,
-            "UPDATE doctors SET dept_id = ?, specialization = ?, consultation_fee = ?, available_time = ?
+            "UPDATE doctors SET dept_id = ?, specialization = ?, consultation_fee = ?, available_time = ?, room = ?
              WHERE doctor_id = ?");
-        mysqli_stmt_bind_param($stmt, "isdsi", $deptId, $spec, $fee, $time, $doctorId);
+        mysqli_stmt_bind_param($stmt, "isdssi", $deptId, $spec, $fee, $time, $room, $doctorId);
         mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
         $message = "Doctor updated.";
@@ -146,7 +148,7 @@ while ($d = mysqli_fetch_assoc($departments)) {
 }
 
 $doctors = mysqli_query($conn,
-    "SELECT d.doctor_id, d.dept_id, d.specialization, d.consultation_fee, d.available_time,
+    "SELECT d.doctor_id, d.dept_id, d.specialization, d.consultation_fee, d.available_time, d.room,
             u.full_name, u.email, u.phone
      FROM doctors d
      JOIN users u ON d.user_id = u.user_id
@@ -215,8 +217,16 @@ include "header.php";
     <label for="specialization">Specialization</label>
     <input type="text" id="specialization" name="specialization" placeholder="Heart Specialist, MBBS, MD">
 
-    <label for="available_time">Visiting hours</label>
-    <input type="text" id="available_time" name="available_time" placeholder="Sun-Thu, 5 PM - 8 PM">
+    <div class="form-grid">
+        <div>
+            <label for="available_time">Visiting hours</label>
+            <input type="text" id="available_time" name="available_time" placeholder="Sun-Thu, 5 PM - 8 PM">
+        </div>
+        <div>
+            <label for="room">Room</label>
+            <input type="text" id="room" name="room" maxlength="20" placeholder="304, 3rd floor">
+        </div>
+    </div>
 
     <input type="submit" name="add" value="Add doctor" class="btn btn-block">
 </form>
@@ -232,7 +242,7 @@ include "header.php";
     <table>
         <tr>
             <th>Doctor</th><th>Department</th><th>Fee</th>
-            <th>Visiting hours</th><th>Save</th><th>Remove</th>
+            <th>Visiting hours</th><th>Room</th><th>Save</th><th>Remove</th>
         </tr>
 
         <?php while ($doc = mysqli_fetch_assoc($doctors)): ?>
@@ -260,6 +270,9 @@ include "header.php";
             <td>
                 <input type="text" name="available_time" value="<?php echo $doc["available_time"]; ?>">
                 <input type="hidden" name="specialization" value="<?php echo $doc["specialization"]; ?>">
+            </td>
+            <td>
+                <input type="text" name="room" value="<?php echo $doc["room"]; ?>" style="width:90px">
             </td>
             <td>
                 <input type="submit" name="update" value="Save" class="btn btn-small">

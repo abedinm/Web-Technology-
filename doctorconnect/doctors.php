@@ -16,7 +16,7 @@ $dept   = isset($_GET["dept"])   ? test_input($_GET["dept"])   : "";
 
 // Build the query in pieces so we only add the filters that were used.
 $sql = "SELECT d.doctor_id, u.full_name, dep.dept_name, d.specialization,
-               d.consultation_fee, d.available_time
+               d.consultation_fee, d.available_time, d.room
         FROM doctors d
         JOIN users u         ON d.user_id = u.user_id
         JOIN departments dep ON d.dept_id = dep.dept_id
@@ -109,6 +109,9 @@ include "header.php";
                 <p class="doctor-meta">
                     Fee: <strong><?php echo $doc["consultation_fee"]; ?> Tk</strong>
                     &middot; Available: <?php echo $doc["available_time"]; ?>
+                    <?php if ($doc["room"] != ""): ?>
+                        &middot; Room <?php echo $doc["room"]; ?>
+                    <?php endif; ?>
                 </p>
             </div>
             <div class="doctor-action">

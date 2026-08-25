@@ -25,11 +25,13 @@ $message = "";
 $specialization = $doctor["specialization"];
 $fee            = $doctor["consultation_fee"];
 $available      = $doctor["available_time"];
+$room           = $doctor["room"];
 
 if (isset($_POST["submit"])) {
 
     $specialization = test_input($_POST["specialization"]);
     $available      = test_input($_POST["available_time"]);
+    $room           = test_input($_POST["room"]);
     $fee            = $_POST["consultation_fee"];
 
     if ($specialization == "" || $available == "") {
@@ -43,9 +45,9 @@ if (isset($_POST["submit"])) {
 
         $stmt = mysqli_prepare($conn,
             "UPDATE doctors
-             SET specialization = ?, consultation_fee = ?, available_time = ?
+             SET specialization = ?, consultation_fee = ?, available_time = ?, room = ?
              WHERE doctor_id = ?");
-        mysqli_stmt_bind_param($stmt, "sdsi", $specialization, $fee, $available, $doctor["doctor_id"]);
+        mysqli_stmt_bind_param($stmt, "sdssi", $specialization, $fee, $available, $room, $doctor["doctor_id"]);
 
         if (mysqli_stmt_execute($stmt)) {
             $message = "Your profile has been updated.";
@@ -106,6 +108,11 @@ include "header.php";
                    placeholder="e.g. Sun-Thu, 5 PM - 8 PM">
         </div>
     </div>
+
+    <label for="room">Room</label>
+    <input type="text" id="room" name="room" maxlength="20"
+           value="<?php echo $room; ?>"
+           placeholder="e.g. 304, 3rd floor">
 
     <input type="submit" name="submit" value="Save changes" class="btn btn-block">
 
