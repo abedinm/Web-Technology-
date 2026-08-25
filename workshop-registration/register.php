@@ -9,14 +9,17 @@ include "db.php";
 
 header("Content-Type: application/json");
 
-$student_id = trim($_POST["student_id"]);
-$name = trim($_POST["name"]);
-$email = trim($_POST["email"]);
-$department = $_POST["department"];
-$workshop_id = $_POST["workshop_id"];
+// Read every field defensively. A missing key would otherwise raise a PHP
+// warning, and that warning would be printed before the JSON below - which
+// makes the whole response invalid JSON for the JavaScript that reads it.
+$student_id  = isset($_POST["student_id"])  ? trim($_POST["student_id"])  : "";
+$name        = isset($_POST["name"])        ? trim($_POST["name"])        : "";
+$email       = isset($_POST["email"])       ? trim($_POST["email"])       : "";
+$department  = isset($_POST["department"])  ? trim($_POST["department"])  : "";
+$workshop_id = isset($_POST["workshop_id"]) ? trim($_POST["workshop_id"]) : "";
 
 // Validation
-if ($student_id == "" || $name == "" || $email == "" || $workshop_id == "") {
+if ($student_id == "" || $name == "" || $email == "" || $department == "" || $workshop_id == "") {
 
     echo json_encode(array(
         "status" => "error",

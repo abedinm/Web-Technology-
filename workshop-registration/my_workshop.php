@@ -49,22 +49,22 @@ mysqli_close($conn);
 
             <p>
                 Student ID:
-                <strong><?php echo $row["student_id"]; ?></strong>
+                <strong><?php echo htmlspecialchars($row["student_id"]); ?></strong>
             </p>
 
             <p>
                 Name:
-                <strong><?php echo $row["name"]; ?></strong>
+                <strong><?php echo htmlspecialchars($row["name"]); ?></strong>
             </p>
 
             <p>
                 Email:
-                <strong><?php echo $row["email"]; ?></strong>
+                <strong><?php echo htmlspecialchars($row["email"]); ?></strong>
             </p>
 
             <p>
                 Department:
-                <strong><?php echo $row["department"]; ?></strong>
+                <strong><?php echo htmlspecialchars($row["department"]); ?></strong>
             </p>
 
             <p>
@@ -78,22 +78,22 @@ mysqli_close($conn);
 
             <p>
                 Workshop:
-                <strong><?php echo $row["title"]; ?></strong>
+                <strong><?php echo htmlspecialchars($row["title"]); ?></strong>
             </p>
 
             <p>
                 Instructor:
-                <strong><?php echo $row["instructor"]; ?></strong>
+                <strong><?php echo htmlspecialchars($row["instructor"]); ?></strong>
             </p>
 
             <p>
                 Schedule:
-                <strong><?php echo $row["schedule"]; ?></strong>
+                <strong><?php echo htmlspecialchars($row["schedule"]); ?></strong>
             </p>
 
             <p>
                 Registered On:
-                <strong><?php echo $row["registered_at"]; ?></strong>
+                <strong><?php echo htmlspecialchars($row["registered_at"]); ?></strong>
             </p>
 
         </div>

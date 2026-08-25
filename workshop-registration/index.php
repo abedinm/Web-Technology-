@@ -48,7 +48,7 @@ if (isset($_COOKIE["remember_student"])) {
             type="text"
             name="student_id"
             id="student_id"
-            value="<?php echo $remembered; ?>"
+            value="<?php echo htmlspecialchars($remembered); ?>"
             required
         >
 
