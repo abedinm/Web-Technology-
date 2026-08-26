@@ -27,7 +27,10 @@ $patientId   = "";
 $newName     = "";
 $newPhone    = "";
 $newEmail    = "";
-$doctorId    = "";
+// Arriving from the doctor list as walkin.php?doctor_id=3 pre-selects
+// that doctor, so the receptionist does not have to find the same name
+// a second time. intval keeps a typed-in value harmless.
+$doctorId    = isset($_GET["doctor_id"]) ? intval($_GET["doctor_id"]) : "";
 $date        = date("Y-m-d");
 $slot        = "";
 

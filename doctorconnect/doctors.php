@@ -8,7 +8,12 @@
 // between GET and POST in practice.
 // ============================================================
 include "auth.php";
-require_role("patient");
+
+// Patients browse this list to choose a doctor. The receptionist needs
+// the same list at the front desk when a walk-in asks who is available,
+// so both roles are allowed in. The Book button below changes to suit
+// whichever one is looking.
+require_any_role(array("patient", "receptionist"));
 
 // $_GET values, with "" as the default on the first visit.
 $search = isset($_GET["search"]) ? test_input($_GET["search"]) : "";
@@ -115,8 +120,14 @@ include "header.php";
                 </p>
             </div>
             <div class="doctor-action">
-                <!-- The doctor's id travels in the URL to the booking page -->
-                <a href="book.php?doctor_id=<?php echo $doc["doctor_id"]; ?>" class="btn">Book</a>
+                <?php if ($_SESSION["role"] == "receptionist"): ?>
+                    <!-- The receptionist books on somebody else's behalf, so
+                         the button goes to the walk-in form instead. -->
+                    <a href="walkin.php?doctor_id=<?php echo $doc["doctor_id"]; ?>" class="btn">Book walk-in</a>
+                <?php else: ?>
+                    <!-- The doctor's id travels in the URL to the booking page -->
+                    <a href="book.php?doctor_id=<?php echo $doc["doctor_id"]; ?>" class="btn">Book</a>
+                <?php endif; ?>
             </div>
         </div>
     <?php endwhile; ?>

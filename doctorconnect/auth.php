@@ -57,6 +57,18 @@ function require_role($role) {
 
 
 // Each role has its own home page.
+// Some pages belong to more than one role. The doctor list, for
+// example, is used by a patient choosing who to book and by the
+// receptionist answering the same question at the front desk.
+function require_any_role($roles) {
+    require_login();
+    if (!in_array($_SESSION["role"], $roles)) {
+        header("Location: " . dashboard_for($_SESSION["role"]));
+        exit();
+    }
+}
+
+
 function dashboard_for($role) {
     if ($role == "admin") {
         return "admin_dashboard.php";
