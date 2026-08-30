@@ -91,6 +91,8 @@ include "header.php";
         <p class="empty">No doctors matched your search. <a href="doctors.php">Show all doctors</a>.</p>
     </div>
 <?php else: ?>
+    <!-- Three-column card grid, as in the Figma "Find a Doctor" screen. -->
+    <div class="doctor-grid">
     <?php while ($doc = mysqli_fetch_assoc($doctors)): ?>
         <div class="card doctor-card">
             <div class="doctor-avatar">
@@ -131,6 +133,7 @@ include "header.php";
             </div>
         </div>
     <?php endwhile; ?>
+    </div>
 <?php endif; ?>
 
 <?php

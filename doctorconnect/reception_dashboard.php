@@ -103,6 +103,20 @@ foreach ($rows as $r) {
     }
 }
 
+// Doctors for the quick walk-in panel beside the queue.
+$deskDoctors = mysqli_query($conn,
+    "SELECT d.doctor_id, u.full_name, dep.dept_name
+     FROM doctors d
+     JOIN users u         ON d.user_id = u.user_id
+     JOIN departments dep ON d.dept_id = dep.dept_id
+     ORDER BY u.full_name");
+
+$deskSlots = array(
+    "9:00 AM - 9:30 AM", "10:00 AM - 10:30 AM", "11:00 AM - 11:30 AM",
+    "4:00 PM - 4:30 PM", "5:00 PM - 5:30 PM", "6:00 PM - 6:30 PM",
+    "7:00 PM - 7:30 PM", "8:00 PM - 8:30 PM"
+);
+
 $pageTitle = "Front Desk";
 include "header.php";
 ?>
@@ -141,6 +155,11 @@ include "header.php";
     </form>
 </div>
 
+<!-- Queue on the left, quick walk-in panel on the right, as in the
+     Figma "Receptionist Desk" screen. -->
+<div class="desk">
+
+<div class="desk-main">
 <?php if ($total == 0): ?>
 
     <div class="card">
@@ -189,5 +208,52 @@ include "header.php";
     </div>
 
 <?php endif; ?>
+</div><!-- /desk-main -->
+
+<aside class="desk-side">
+    <div class="card">
+        <h2 class="nav-label">Quick walk-in booking</h2>
+
+        <!-- Posts to walkin.php, which already validates the details and
+             creates the patient account when the person is new. -->
+        <form method="POST" action="walkin.php">
+            <input type="hidden" name="patient_mode" value="new">
+
+            <label for="w_name">Patient name</label>
+            <input type="text" id="w_name" name="new_name" placeholder="Full name">
+
+            <label for="w_phone">Phone</label>
+            <input type="text" id="w_phone" name="new_phone" placeholder="01XXXXXXXXX">
+
+            <label for="w_doc">Doctor</label>
+            <select id="w_doc" name="doctor_id">
+                <option value="0">-- choose --</option>
+                <?php while ($dd = mysqli_fetch_assoc($deskDoctors)): ?>
+                    <option value="<?php echo $dd["doctor_id"]; ?>">
+                        <?php echo $dd["full_name"]; ?> &mdash; <?php echo $dd["dept_name"]; ?>
+                    </option>
+                <?php endwhile; ?>
+            </select>
+
+            <label for="w_date">Date</label>
+            <input type="date" id="w_date" name="appt_date" value="<?php echo $date; ?>">
+
+            <label for="w_slot">Time slot</label>
+            <select id="w_slot" name="time_slot">
+                <option value="">-- choose --</option>
+                <?php foreach ($deskSlots as $ds): ?>
+                    <option value="<?php echo $ds; ?>"><?php echo $ds; ?></option>
+                <?php endforeach; ?>
+            </select>
+
+            <input type="submit" name="submit" value="Confirm walk-in" class="btn btn-block">
+        </form>
+
+        <p class="hint">A new patient account is created automatically with the
+           default password 1234.</p>
+    </div>
+</aside>
+
+</div><!-- /desk -->
 
 <?php include "footer.php"; ?>

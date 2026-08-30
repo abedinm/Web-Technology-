@@ -136,17 +136,24 @@ class DoctorConnectTest(unittest.TestCase):
         accepted, and fails loudly on any other error message.
         """
         for _ in range(12):
-            # Re-read the list every time. book.php greys out the slots that
-            # are already taken once a date has been chosen, so a list read
-            # before the first submit goes stale after the page reloads.
-            select = Select(self.driver.find_element(By.NAME, "time_slot"))
-            free = [o.get_attribute("value") for o in select.options
-                    if o.get_attribute("value") and not o.get_attribute("disabled")]
+            # Two different pickers exist. book.php shows the slots as a grid
+            # of chips (the Figma design), while walkin.php still uses a plain
+            # dropdown, so handle whichever this page is using.
+            chips = self.driver.find_elements(By.CSS_SELECTOR, ".slotgrid .slot:not(.taken)")
 
-            if not free:
-                self.fail("every time slot on this date is already booked")
+            if chips:
+                chips[0].click()
+                chosen = chips[0].get_attribute("data-slot")
+            else:
+                select = Select(self.driver.find_element(By.NAME, "time_slot"))
+                free = [o.get_attribute("value") for o in select.options
+                        if o.get_attribute("value") and not o.get_attribute("disabled")]
 
-            select.select_by_value(free[0])
+                if not free:
+                    self.fail("every time slot on this date is already booked")
+
+                select.select_by_value(free[0])
+                chosen = free[0]
 
             # Hold on to the button so we can wait for the page to actually
             # turn over. Checking the URL straight after click() races the
@@ -156,7 +163,7 @@ class DoctorConnectTest(unittest.TestCase):
             self.wait.until(EC.staleness_of(button))
 
             if expect_url in self.driver.current_url:
-                return free[0]
+                return chosen
 
             errors = self.driver.find_elements(By.CLASS_NAME, "alert-error")
             if not errors:
@@ -243,9 +250,13 @@ class DoctorConnectTest(unittest.TestCase):
         self.wait.until(EC.presence_of_element_located((By.NAME, "appt_date")))
 
         # A date far enough ahead that the slot is unlikely to be taken.
+        # book.php now picks the date through day cards that reload the page
+        # with ?date=, so drive it the same way a user would.
         future = self.future_date()
-        date_field = self.driver.find_element(By.NAME, "appt_date")
-        self.driver.execute_script("arguments[0].value = arguments[1];", date_field, future)
+        url = self.driver.current_url.split("#")[0]
+        joiner = "&" if "?" in url else "?"
+        self.driver.get(url + joiner + "date=" + future)
+        self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".slotgrid")))
 
         self.submit_picking_a_free_slot("my_appointments.php")
         self.assertIn("pending", self.body().lower())
@@ -289,8 +300,10 @@ class DoctorConnectTest(unittest.TestCase):
         self.wait.until(EC.presence_of_element_located((By.NAME, "appt_date")))
 
         day = self.future_date()
-        date_field = self.driver.find_element(By.NAME, "appt_date")
-        self.driver.execute_script("arguments[0].value = arguments[1];", date_field, day)
+        url = self.driver.current_url.split("#")[0]
+        joiner = "&" if "?" in url else "?"
+        self.driver.get(url + joiner + "date=" + day)
+        self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".slotgrid")))
         self.submit_picking_a_free_slot("my_appointments.php")
 
         # Now open it as the doctor who owns that slot.

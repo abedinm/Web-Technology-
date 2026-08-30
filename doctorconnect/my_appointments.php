@@ -38,17 +38,50 @@ if (isset($_GET["booked"])) {
     $message = "Your appointment has been booked. The doctor will confirm it.";
 }
 
-// ---- all appointments of this patient ----
+// ---- how many of each status, for the filter tabs ----
+$counts = array("pending" => 0, "confirmed" => 0, "completed" => 0, "cancelled" => 0);
+
 $stmt = mysqli_prepare($conn,
-    "SELECT a.appt_id, a.appt_date, a.time_slot, a.status,
-            u.full_name AS doctor_name, dep.dept_name, d.consultation_fee
-     FROM appointments a
-     JOIN doctors d       ON a.doctor_id = d.doctor_id
-     JOIN users u         ON d.user_id = u.user_id
-     JOIN departments dep ON d.dept_id = dep.dept_id
-     WHERE a.patient_id = ?
-     ORDER BY a.appt_date DESC, a.appt_id DESC");
+    "SELECT status, COUNT(*) AS total FROM appointments
+     WHERE patient_id = ? GROUP BY status");
 mysqli_stmt_bind_param($stmt, "i", $patientId);
+mysqli_stmt_execute($stmt);
+$cRes = mysqli_stmt_get_result($stmt);
+while ($cRow = mysqli_fetch_assoc($cRes)) {
+    $counts[$cRow["status"]] = $cRow["total"];
+}
+mysqli_stmt_close($stmt);
+
+$totalAll = array_sum($counts);
+
+// Which tab is open? Anything unexpected in the URL falls back to "all",
+// so the value can never reach the query as-is.
+$filter = isset($_GET["status"]) ? $_GET["status"] : "all";
+if (!in_array($filter, array("all", "pending", "confirmed", "completed", "cancelled"))) {
+    $filter = "all";
+}
+
+// ---- all appointments of this patient ----
+$sql = "SELECT a.appt_id, a.appt_date, a.time_slot, a.status,
+               u.full_name AS doctor_name, dep.dept_name, d.consultation_fee
+        FROM appointments a
+        JOIN doctors d       ON a.doctor_id = d.doctor_id
+        JOIN users u         ON d.user_id = u.user_id
+        JOIN departments dep ON d.dept_id = dep.dept_id
+        WHERE a.patient_id = ?";
+
+if ($filter != "all") {
+    $sql .= " AND a.status = ?";
+}
+$sql .= " ORDER BY a.appt_date DESC, a.appt_id DESC";
+
+$stmt = mysqli_prepare($conn, $sql);
+
+if ($filter == "all") {
+    mysqli_stmt_bind_param($stmt, "i", $patientId);
+} else {
+    mysqli_stmt_bind_param($stmt, "is", $patientId, $filter);
+}
 mysqli_stmt_execute($stmt);
 $appointments = mysqli_stmt_get_result($stmt);
 
@@ -64,6 +97,27 @@ include "header.php";
 <?php if ($message != ""): ?>
     <div class="alert-ok"><?php echo $message; ?></div>
 <?php endif; ?>
+
+<!-- Filter tabs, as in the Figma "My Appointments" screen. Each tab is a
+     plain link carrying ?status=, so it works without JavaScript. -->
+<div class="tabs">
+    <?php
+    $tabs = array(
+        "all"       => "All",
+        "pending"   => "Pending",
+        "confirmed" => "Confirmed",
+        "completed" => "Completed",
+        "cancelled" => "Cancelled"
+    );
+
+    foreach ($tabs as $key => $label) {
+        $n  = ($key == "all") ? $totalAll : $counts[$key];
+        $on = ($filter == $key) ? " on" : "";
+        echo '<a class="tab' . $on . '" href="my_appointments.php?status=' . $key . '">'
+           . $label . ' <span>' . $n . '</span></a>';
+    }
+    ?>
+</div>
 
 <div class="card">
     <?php if (mysqli_num_rows($appointments) == 0): ?>

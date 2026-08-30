@@ -40,8 +40,16 @@ $slots = array(
 );
 
 $error = "";
-$date  = "";
 $slot  = "";
+
+// The day cards reload the page with ?date=YYYY-MM-DD, so read that first
+// and fall back to today. A malformed value in the URL is ignored rather
+// than passed on to the query below.
+if (isset($_GET["date"]) && preg_match("/^\d{4}-\d{2}-\d{2}$/", $_GET["date"])) {
+    $date = $_GET["date"];
+} else {
+    $date = date("Y-m-d");
+}
 
 if (isset($_POST["submit"])) {
 
@@ -149,24 +157,55 @@ include "header.php";
     <form method="post" action="book.php?doctor_id=<?php echo $doctorId; ?>"
           onsubmit="return checkBooking()">
 
-        <label for="appt_date">Appointment date</label>
-        <input type="date" id="appt_date" name="appt_date"
-               value="<?php echo $date; ?>"
-               min="<?php echo date('Y-m-d'); ?>">
+        <label>Select a date</label>
 
-        <label for="time_slot">Time slot</label>
-        <select id="time_slot" name="time_slot">
-            <option value="">-- Select a time --</option>
+        <!-- Seven days as tappable cards, the way the Figma design shows it.
+             The real value still travels in a hidden field so the PHP above
+             is unchanged. -->
+        <div class="daystrip">
+            <?php
+            for ($d = 0; $d < 7; $d++) {
+
+                $stamp = strtotime("+$d day");
+                $value = date("Y-m-d", $stamp);
+                $on    = ($date == $value);
+                ?>
+                <button type="button"
+                        class="day<?php echo $on ? " on" : ""; ?>"
+                        data-date="<?php echo $value; ?>">
+                    <span class="day-w"><?php echo date("D", $stamp); ?></span>
+                    <span class="day-n"><?php echo date("j", $stamp); ?></span>
+                </button>
+            <?php } ?>
+        </div>
+
+        <input type="hidden" id="appt_date" name="appt_date" value="<?php echo $date; ?>">
+
+        <label>Available time slots</label>
+
+        <!-- Slots as a grid of chips. A booked slot is shown flat and cannot
+             be chosen, which is clearer than a disabled <option>. -->
+        <div class="slotgrid">
             <?php foreach ($slots as $s): ?>
                 <?php $isTaken = in_array($s, $takenSlots); ?>
-                <option value="<?php echo $s; ?>"
-                    <?php echo ($slot == $s) ? "selected" : ""; ?>
-                    <?php echo $isTaken ? "disabled" : ""; ?>>
-                    <?php echo $s; ?><?php echo $isTaken ? " (booked)" : ""; ?>
-                </option>
+                <button type="button"
+                        class="slot<?php echo $isTaken ? " taken" : ($slot == $s ? " on" : ""); ?>"
+                        data-slot="<?php echo $s; ?>"
+                        <?php echo $isTaken ? "disabled" : ""; ?>>
+                    <?php echo $s; ?>
+                </button>
             <?php endforeach; ?>
-        </select>
-        <span class="hint">Pick a date first, then reload to see which slots are already taken.</span>
+        </div>
+
+        <input type="hidden" id="time_slot" name="time_slot" value="<?php echo $slot; ?>">
+
+        <div class="slotkey">
+            <span><i class="k-on"></i> Selected</span>
+            <span><i class="k-free"></i> Available</span>
+            <span><i class="k-taken"></i> Booked</span>
+        </div>
+
+        <span class="hint">Choosing a date reloads the page so the booked slots for that day are shown.</span>
 
         <span class="field-error" id="jsError"></span>
 
@@ -175,13 +214,40 @@ include "header.php";
 </div>
 
 <script>
+// The date cards and slot chips are buttons. Clicking one writes its value
+// into the matching hidden input, so the form still submits exactly the
+// same two fields the PHP at the top of this file expects.
+
+var dateField = document.getElementById("appt_date");
+var slotField = document.getElementById("time_slot");
+
+// Choosing a date reloads the page, because which slots are already taken
+// depends on the date and that answer lives on the server.
+document.querySelectorAll(".daystrip .day").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+        var url = new URL(window.location.href);
+        url.searchParams.set("date", btn.dataset.date);
+        window.location.href = url.toString();
+    });
+});
+
+document.querySelectorAll(".slotgrid .slot").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+        if (btn.disabled) { return; }
+        document.querySelectorAll(".slotgrid .slot").forEach(function (b) {
+            b.classList.remove("on");
+        });
+        btn.classList.add("on");
+        slotField.value = btn.dataset.slot;
+        document.getElementById("jsError").innerHTML = "";
+    });
+});
+
 function checkBooking() {
-    var d = document.getElementById("appt_date").value;
-    var t = document.getElementById("time_slot").value;
     var box = document.getElementById("jsError");
 
-    if (d == "") { box.innerHTML = "Please choose a date."; return false; }
-    if (t == "") { box.innerHTML = "Please choose a time slot."; return false; }
+    if (dateField.value == "") { box.innerHTML = "Please choose a date."; return false; }
+    if (slotField.value == "") { box.innerHTML = "Please choose a time slot."; return false; }
     return true;
 }
 </script>
