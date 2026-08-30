@@ -92,51 +92,92 @@ if (isset($_POST["submit"])) {
 }
 
 $pageTitle = "Register";
+$authSplit = true;   // split brand/form layout, as in the Figma design
 include "header.php";
 ?>
 
-<div class="auth-wrap">
-    <div class="card auth-card">
-        <h1>Create a patient account</h1>
-        <p class="muted">Register to book appointments with our doctors.</p>
+<div class="split">
 
-        <?php if ($success != ""): ?>
-            <div class="alert-ok">
-                <?php echo $success; ?> <a href="login.php">Go to login</a>
-            </div>
-        <?php endif; ?>
+    <!-- Left: brand panel, as in the Figma "02 - Register" screen. -->
+    <aside class="split-brand split-brand-narrow">
+        <a href="index.php" class="split-logo">
+            <?php echo logo_mark(40); ?>
+            <span>DoctorConnect</span>
+        </a>
 
-        <!-- onsubmit="return checkForm()" - the word return is required.
-             Without it the browser ignores the false and submits anyway. -->
-        <form method="post" action="register.php" onsubmit="return checkForm()">
+        <h1 class="split-title">Create your<br>account.</h1>
 
-            <label for="full_name">Full Name</label>
-            <input type="text" id="full_name" name="full_name" value="<?php echo $name; ?>">
-            <span class="field-error"><?php echo $errors["name"]; ?></span>
+        <p class="split-sub">One account for every role in the hospital &mdash;
+           patient, doctor, receptionist and admin.</p>
+    </aside>
 
-            <label for="email">Email</label>
-            <input type="text" id="email" name="email" value="<?php echo $email; ?>">
-            <span class="field-error"><?php echo $errors["email"]; ?></span>
+    <!-- Right: the register card, with the paired fields the design shows. -->
+    <main class="split-form">
+        <div class="card auth-card auth-card-wide">
+            <h1>Register</h1>
+            <p class="muted">Fill in your details to create an account.</p>
 
-            <label for="phone">Phone</label>
-            <input type="text" id="phone" name="phone" value="<?php echo $phone; ?>">
-            <span class="field-error"><?php echo $errors["phone"]; ?></span>
+            <?php if ($success != ""): ?>
+                <div class="alert-ok">
+                    <?php echo $success; ?> <a href="login.php">Go to login</a>
+                </div>
+            <?php endif; ?>
 
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password">
-            <span class="field-error"><?php echo $errors["pass"]; ?></span>
+            <!-- onsubmit="return checkForm()" - the word return is required.
+                 Without it the browser ignores the false and submits anyway. -->
+            <form method="post" action="register.php" onsubmit="return checkForm()">
 
-            <label for="confirm">Confirm Password</label>
-            <input type="password" id="confirm" name="confirm">
-            <span class="field-error"><?php echo $errors["confirm"]; ?></span>
+                <div class="form-grid">
+                    <div>
+                        <label for="full_name">Full name</label>
+                        <input type="text" id="full_name" name="full_name"
+                               value="<?php echo $name; ?>" placeholder="e.g. Minhazul Abedin">
+                        <span class="field-error"><?php echo $errors["name"]; ?></span>
+                    </div>
+                    <div>
+                        <label for="email">Email</label>
+                        <input type="text" id="email" name="email"
+                               value="<?php echo $email; ?>" placeholder="you@example.com">
+                        <span class="field-error"><?php echo $errors["email"]; ?></span>
+                    </div>
+                </div>
 
-            <span class="field-error" id="jsError"></span>
+                <div class="form-grid">
+                    <div>
+                        <label for="phone">Phone</label>
+                        <input type="text" id="phone" name="phone"
+                               value="<?php echo $phone; ?>" placeholder="01XXXXXXXXX">
+                        <span class="field-error"><?php echo $errors["phone"]; ?></span>
+                    </div>
+                    <div>
+                        <label for="role_display">Role</label>
+                        <input type="text" id="role_display" value="Patient" readonly>
+                        <span class="hint">Doctor and staff accounts are created by the admin.</span>
+                    </div>
+                </div>
 
-            <input type="submit" name="submit" value="Register" class="btn btn-block">
-        </form>
+                <div class="form-grid">
+                    <div>
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="********">
+                        <span class="field-error"><?php echo $errors["pass"]; ?></span>
+                    </div>
+                    <div>
+                        <label for="confirm">Confirm password</label>
+                        <input type="password" id="confirm" name="confirm" placeholder="********">
+                        <span class="field-error"><?php echo $errors["confirm"]; ?></span>
+                    </div>
+                </div>
 
-        <p class="auth-alt">Already registered? <a href="login.php">Sign in</a></p>
-    </div>
+                <span class="field-error" id="jsError"></span>
+
+                <input type="submit" name="submit" value="Create account" class="btn btn-block">
+            </form>
+
+            <p class="auth-alt">Already registered? <a href="login.php">Log in</a></p>
+        </div>
+    </main>
+
 </div>
 
 <script>

@@ -183,7 +183,7 @@ class DoctorConnectTest(unittest.TestCase):
 
     def test_01_login_page_loads(self):
         self.go("login.php")
-        self.assertIn("Sign in", self.body())
+        self.assert_shows("Log in")   # heading follows the Figma design
         self.assertTrue(self.driver.find_element(By.NAME, "email").is_displayed())
 
     def test_02_wrong_password_is_rejected(self):

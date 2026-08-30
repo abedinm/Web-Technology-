@@ -97,6 +97,11 @@ function navlink($file, $label, $iconName, $here) {
     <main class="main">
         <div class="container">
 
+<?php elseif (!empty($authSplit)): ?>
+
+<!-- Login and register use the split layout from the Figma design, so they
+     draw their own shell instead of the plain top strip below. -->
+
 <?php else: ?>
 
 <div class="plain-top">
