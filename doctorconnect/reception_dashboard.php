@@ -1,29 +1,12 @@
 <?php
-// ============================================================
-// reception_dashboard.php - THE FRONT DESK QUEUE
-//
-// The receptionist's home page. It lists every appointment for one
-// day, in time order, and lets the front desk check a patient in
-// when they arrive or mark them as a no-show.
-//
-// Status meanings used here:
-//   pending   - booked online, patient has not arrived yet
-//   confirmed - patient has arrived and is checked in
-//   completed - the doctor has finished the visit
-//   cancelled - cancelled by the patient, or a no-show
-// ============================================================
+
 include "auth.php";
 require_role("receptionist");
 
 $message = "";
 $error   = "";
 
-// ---------- check in / no show ----------
-// Both actions only change the status column, so one prepared
-// statement handles them. The action name is checked against a
-// fixed list first, so nothing from the form reaches the SQL.
 if (isset($_POST["action"]) && isset($_POST["appt_id"])) {
-
     $apptId = (int) $_POST["appt_id"];
     $action = $_POST["action"];
 
@@ -52,20 +35,13 @@ if (isset($_POST["action"]) && isset($_POST["appt_id"])) {
     }
 }
 
-// ---------- which day are we looking at ----------
 $today = date("Y-m-d");
 $date  = isset($_GET["date"]) ? test_input($_GET["date"]) : $today;
 
-// A bad date in the URL falls back to today rather than breaking the query.
 if (!preg_match("/^\d{4}-\d{2}-\d{2}$/", $date)) {
     $date = $today;
 }
 
-// ---------- the queue ----------
-// Three tables are joined: the booking, the patient who made it and
-// the doctor it belongs to (whose name lives in users, not doctors).
-// STR_TO_DATE turns the start of the slot text into a real time so
-// that 9:00 AM sorts before 10:00 AM instead of after it.
 $stmt = mysqli_prepare($conn,
     "SELECT a.appt_id, a.time_slot, a.status,
             p.full_name AS patient_name, p.phone AS patient_phone,
@@ -87,7 +63,6 @@ while ($row = mysqli_fetch_assoc($queue)) {
 }
 mysqli_stmt_close($stmt);
 
-// ---------- counters for the summary cards ----------
 $total = count($rows);
 $checkedIn = 0;
 $waiting   = 0;
@@ -103,7 +78,6 @@ foreach ($rows as $r) {
     }
 }
 
-// Doctors for the quick walk-in panel beside the queue.
 $deskDoctors = mysqli_query($conn,
     "SELECT d.doctor_id, u.full_name, dep.dept_name
      FROM doctors d
@@ -155,8 +129,6 @@ include "header.php";
     </form>
 </div>
 
-<!-- Queue on the left, quick walk-in panel on the right, as in the
-     Figma "Receptionist Desk" screen. -->
 <div class="desk">
 
 <div class="desk-main">
@@ -208,14 +180,12 @@ include "header.php";
     </div>
 
 <?php endif; ?>
-</div><!-- /desk-main -->
+</div>
 
 <aside class="desk-side">
     <div class="card">
         <h2 class="nav-label">Quick walk-in booking</h2>
 
-        <!-- Posts to walkin.php, which already validates the details and
-             creates the patient account when the person is new. -->
         <form method="POST" action="walkin.php">
             <input type="hidden" name="patient_mode" value="new">
 
@@ -254,6 +224,6 @@ include "header.php";
     </div>
 </aside>
 
-</div><!-- /desk -->
+</div>
 
 <?php include "footer.php"; ?>

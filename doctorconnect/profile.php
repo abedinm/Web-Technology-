@@ -1,11 +1,5 @@
 <?php
-// ============================================================
-// profile.php - MY ACCOUNT (every role)
-//
-// The details that live in the users table: name, email, phone and
-// the password. Linked from the sidebar for all four roles, so it
-// only needs require_login(), not require_role().
-// ============================================================
+
 include "auth.php";
 require_login();
 
@@ -14,23 +8,16 @@ $userId = $_SESSION["user_id"];
 $error   = "";
 $message = "";
 
-// ---------- save name, email and phone ----------
 if (isset($_POST["save_details"])) {
-
     $name  = test_input($_POST["full_name"]);
     $email = test_input($_POST["email"]);
     $phone = test_input($_POST["phone"]);
 
     if ($name == "" || $email == "") {
         $error = "Name and email cannot be empty.";
-
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = "Please enter a valid email address.";
-
     } else {
-
-        // Somebody else may already own that email, because the
-        // column is UNIQUE. "user_id != ?" ignores my own row.
         $stmt = mysqli_prepare($conn, "SELECT user_id FROM users WHERE email = ? AND user_id != ?");
         mysqli_stmt_bind_param($stmt, "si", $email, $userId);
         mysqli_stmt_execute($stmt);
@@ -46,31 +33,24 @@ if (isset($_POST["save_details"])) {
             mysqli_stmt_execute($stmt);
             mysqli_stmt_close($stmt);
 
-            // The sidebar prints the name from the session, so refresh it.
             $_SESSION["full_name"] = $name;
             $message = "Your details have been saved.";
         }
     }
 }
 
-// ---------- change password ----------
 if (isset($_POST["save_password"])) {
-
     $current = $_POST["current_password"];
     $new     = $_POST["new_password"];
     $again   = $_POST["confirm_password"];
 
     if ($current == "" || $new == "" || $again == "") {
         $error = "Please fill in all three password fields.";
-
     } elseif ($new != $again) {
         $error = "The two new passwords do not match.";
-
     } elseif (strlen($new) < 4) {
         $error = "The new password is too short.";
-
     } else {
-
         $stmt = mysqli_prepare($conn, "SELECT password FROM users WHERE user_id = ?");
         mysqli_stmt_bind_param($stmt, "i", $userId);
         mysqli_stmt_execute($stmt);
@@ -90,7 +70,6 @@ if (isset($_POST["save_password"])) {
     }
 }
 
-// ---------- current values ----------
 $stmt = mysqli_prepare($conn, "SELECT full_name, email, phone, role, created_at FROM users WHERE user_id = ?");
 mysqli_stmt_bind_param($stmt, "i", $userId);
 mysqli_stmt_execute($stmt);

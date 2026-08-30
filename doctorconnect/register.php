@@ -1,11 +1,5 @@
 <?php
-// ============================================================
-// register.php - PATIENT REGISTRATION
-//
-// Only patients sign up here. Doctors are created by the admin,
-// so the role is fixed to 'patient' in the INSERT below - the
-// visitor cannot choose to become an admin.
-// ============================================================
+
 include "auth.php";
 
 if (is_logged_in()) {
@@ -13,20 +7,17 @@ if (is_logged_in()) {
     exit();
 }
 
-// One error message per field, shown next to that field.
 $errors = array("name" => "", "email" => "", "phone" => "", "pass" => "", "confirm" => "");
 $name = $email = $phone = "";
 $success = "";
 
 if (isset($_POST["submit"])) {
-
     $name    = test_input($_POST["full_name"]);
     $email   = test_input($_POST["email"]);
     $phone   = test_input($_POST["phone"]);
     $pass    = $_POST["password"];
     $confirm = $_POST["confirm"];
 
-    // ---- validation, one rule per field ----
     if ($name == "") {
         $errors["name"] = "Full name is required.";
     } elseif (strlen($name) < 3) {
@@ -36,8 +27,6 @@ if (isset($_POST["submit"])) {
     if ($email == "") {
         $errors["email"] = "Email is required.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        // filter_var with FILTER_VALIDATE_EMAIL is PHP's built-in
-        // email checker - it returns false for an invalid address.
         $errors["email"] = "Enter a valid email address.";
     }
 
@@ -55,9 +44,6 @@ if (isset($_POST["submit"])) {
         $errors["confirm"] = "The two passwords do not match.";
     }
 
-    // Is this email already registered? The email column is UNIQUE,
-    // so we check first and show a friendly message instead of
-    // letting MySQL throw a duplicate-entry error.
     if ($errors["email"] == "") {
         $stmt = mysqli_prepare($conn, "SELECT user_id FROM users WHERE email = ?");
         mysqli_stmt_bind_param($stmt, "s", $email);
@@ -69,11 +55,7 @@ if (isset($_POST["submit"])) {
         mysqli_stmt_close($stmt);
     }
 
-    // ---- no errors? save the new patient ----
     if (implode("", $errors) == "") {
-
-        // Never store the real password. password_hash scrambles it
-        // one way, so even we cannot read it back.
         $hash = password_hash($pass, PASSWORD_DEFAULT);
 
         $stmt = mysqli_prepare($conn,
@@ -92,13 +74,12 @@ if (isset($_POST["submit"])) {
 }
 
 $pageTitle = "Register";
-$authSplit = true;   // split brand/form layout, as in the Figma design
+$authSplit = true;
 include "header.php";
 ?>
 
 <div class="split">
 
-    <!-- Left: brand panel, as in the Figma "02 - Register" screen. -->
     <aside class="split-brand split-brand-narrow">
         <a href="index.php" class="split-logo">
             <?php echo logo_mark(40); ?>
@@ -111,7 +92,6 @@ include "header.php";
            patient, doctor, receptionist and admin.</p>
     </aside>
 
-    <!-- Right: the register card, with the paired fields the design shows. -->
     <main class="split-form">
         <div class="card auth-card auth-card-wide">
             <h1>Register</h1>
@@ -123,8 +103,6 @@ include "header.php";
                 </div>
             <?php endif; ?>
 
-            <!-- onsubmit="return checkForm()" - the word return is required.
-                 Without it the browser ignores the false and submits anyway. -->
             <form method="post" action="register.php" onsubmit="return checkForm()">
 
                 <div class="form-grid">
@@ -181,9 +159,6 @@ include "header.php";
 </div>
 
 <script>
-// CLIENT-SIDE VALIDATION (JavaScript, runs in the browser).
-// This gives instant feedback. The PHP checks above still run on
-// the server, because a visitor can switch JavaScript off.
 function checkForm() {
     var name    = document.getElementById("full_name").value;
     var email   = document.getElementById("email").value;

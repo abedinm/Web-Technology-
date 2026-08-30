@@ -1,10 +1,5 @@
 <?php
-// ============================================================
-// index.php - THE FRONT DOOR
-//
-// Already logged in? Go straight to the dashboard for your role.
-// Otherwise show the landing page with a link to sign in.
-// ============================================================
+
 include "auth.php";
 
 if (is_logged_in()) {
@@ -12,7 +7,6 @@ if (is_logged_in()) {
     exit();
 }
 
-// Numbers for the landing page, read live from the database.
 $r = mysqli_query($conn, "SELECT COUNT(*) AS total FROM doctors");
 $doctorCount = mysqli_fetch_assoc($r)["total"];
 

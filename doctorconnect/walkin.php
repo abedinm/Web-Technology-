@@ -1,17 +1,8 @@
 <?php
-// ============================================================
-// walkin.php - BOOKING FOR A PATIENT AT THE COUNTER
-//
-// A patient who walks in without booking online still needs a row
-// in the appointments table. The receptionist either picks a patient
-// who already has an account, or types the details of a new one -
-// in which case a patient account is created first, because
-// appointments.patient_id is a foreign key into users.
-// ============================================================
+
 include "auth.php";
 require_role("receptionist");
 
-// The same slot list the patients see in book.php.
 $slots = array(
     "9:00 AM - 9:30 AM", "10:00 AM - 10:30 AM", "11:00 AM - 11:30 AM",
     "4:00 PM - 4:30 PM", "5:00 PM - 5:30 PM", "6:00 PM - 6:30 PM",
@@ -21,21 +12,17 @@ $slots = array(
 $error   = "";
 $message = "";
 
-// Values kept so the form can be redrawn with what was typed.
 $patientMode = "existing";
 $patientId   = "";
 $newName     = "";
 $newPhone    = "";
 $newEmail    = "";
-// Arriving from the doctor list as walkin.php?doctor_id=3 pre-selects
-// that doctor, so the receptionist does not have to find the same name
-// a second time. intval keeps a typed-in value harmless.
+
 $doctorId    = isset($_GET["doctor_id"]) ? intval($_GET["doctor_id"]) : "";
 $date        = date("Y-m-d");
 $slot        = "";
 
 if (isset($_POST["submit"])) {
-
     $patientMode = isset($_POST["patient_mode"]) ? $_POST["patient_mode"] : "existing";
     $patientId   = isset($_POST["patient_id"]) ? (int) $_POST["patient_id"] : 0;
     $newName     = test_input($_POST["new_name"]);
@@ -45,36 +32,22 @@ if (isset($_POST["submit"])) {
     $date        = test_input($_POST["appt_date"]);
     $slot        = test_input($_POST["time_slot"]);
 
-    // ---------- validation ----------
     if ($doctorId == 0 || $date == "" || $slot == "") {
         $error = "Please choose a doctor, a date and a time slot.";
-
     } elseif (!in_array($slot, $slots)) {
         $error = "That time slot is not available.";
-
     } elseif ($date < date("Y-m-d")) {
         $error = "You cannot book a date in the past.";
-
     } elseif ($patientMode == "existing" && $patientId == 0) {
         $error = "Please choose a patient from the list.";
-
     } elseif ($patientMode == "new" && ($newName == "" || $newPhone == "")) {
         $error = "A new patient needs at least a name and a phone number.";
-
     } else {
-
-        // ---------- create the patient account if this is a new person ----------
         if ($patientMode == "new") {
-
-            // The email column is UNIQUE and NOT NULL. Someone at the
-            // counter may not have an email address, so we build a
-            // placeholder from the phone number they gave.
             if ($newEmail == "") {
                 $newEmail = "walkin." . preg_replace("/[^0-9]/", "", $newPhone) . "@doctorconnect.local";
             }
 
-            // Is that email already registered? Then reuse the account
-            // instead of failing on the UNIQUE constraint.
             $stmt = mysqli_prepare($conn, "SELECT user_id FROM users WHERE email = ?");
             mysqli_stmt_bind_param($stmt, "s", $newEmail);
             mysqli_stmt_execute($stmt);
@@ -84,8 +57,6 @@ if (isset($_POST["submit"])) {
             if ($found) {
                 $patientId = $found["user_id"];
             } else {
-                // Walk-in accounts get the default password 1234, which
-                // the patient can change after logging in.
                 $hash = password_hash("1234", PASSWORD_DEFAULT);
                 $stmt = mysqli_prepare($conn,
                     "INSERT INTO users (full_name, email, password, phone, role)
@@ -101,7 +72,6 @@ if (isset($_POST["submit"])) {
             }
         }
 
-        // ---------- is the slot still free ----------
         if ($error == "") {
             $stmt = mysqli_prepare($conn,
                 "SELECT appt_id FROM appointments
@@ -115,9 +85,6 @@ if (isset($_POST["submit"])) {
             if ($taken) {
                 $error = "That slot is already booked. Please pick another time.";
             } else {
-
-                // A walk-in patient is standing at the counter, so the
-                // booking is created already confirmed rather than pending.
                 $stmt = mysqli_prepare($conn,
                     "INSERT INTO appointments (patient_id, doctor_id, appt_date, time_slot, status)
                      VALUES (?, ?, ?, ?, 'confirmed')");
@@ -125,8 +92,7 @@ if (isset($_POST["submit"])) {
 
                 if (mysqli_stmt_execute($stmt)) {
                     mysqli_stmt_close($stmt);
-                    // Redirect after a successful POST so refreshing the
-                    // page does not book the same slot twice.
+
                     header("Location: reception_dashboard.php?date=" . urlencode($date));
                     exit();
                 } else {
@@ -138,7 +104,6 @@ if (isset($_POST["submit"])) {
     }
 }
 
-// ---------- lists for the two dropdowns ----------
 $patients = mysqli_query($conn,
     "SELECT user_id, full_name, phone FROM users
      WHERE role = 'patient' ORDER BY full_name");

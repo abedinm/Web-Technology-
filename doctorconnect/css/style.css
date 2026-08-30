@@ -1,55 +1,33 @@
-/* ============================================================
-   DoctorConnect - stylesheet
-   CSC 3215 Web Technologies | Group 6, Section F
 
-   Design decisions, so they can be explained:
-   - Type:    Figtree for headings, Source Sans 3 for text.
-              Both self-hosted in css/fonts, so the site does not
-              need an internet connection to look right.
-   - Colour:  a clinical teal, not a generic blue, on a warm
-              off-white page. Cold grey backgrounds make an
-              interface look unfinished.
-   - Surface: hairline borders instead of drop shadows. Shadows
-              on every box is the quickest way to look generic.
-   - Radius:  three values only - 12px panels, 7px controls,
-              999px pills. One value everywhere looks accidental.
-   - Layout:  a fixed sidebar, so the page is not one long
-              column of identical white cards.
-   ============================================================ */
 
 @import url("fonts/fonts.css");
 
-/* ---------- design tokens ----------
-   Every colour is named once here. Components use the variable,
-   never a raw hex, so the whole palette can change in one place. */
 :root {
-    /* Palette taken from the Figma file "DoctorConnect - UI Design".
-       Cool teal on a blue-grey page, not the earlier warm scheme. */
-    --ink:        #10242e;   /* ink/900   main text      */
-    --ink-2:      #4a5c66;   /* ink/600   secondary      */
-    --ink-3:      #7c8b94;   /* ink/400   labels, hints  */
+    --ink:        #10242e;
+    --ink-2:      #4a5c66;
+    --ink-3:      #7c8b94;
 
-    --teal:       #0e7c86;   /* brand/primary            */
-    --teal-dark:  #0a5a62;   /* brand/primary-dark       */
-    --teal-soft:  #e3f1f2;   /* brand/soft               */
+    --teal:       #0e7c86;
+    --teal-dark:  #0a5a62;
+    --teal-soft:  #e3f1f2;
     --teal-line:  #b9dade;
 
-    --page:       #f1f5f6;   /* surface/page             */
-    --surface:    #ffffff;   /* surface/card             */
-    --line:       #dce5e8;   /* border/default           */
+    --page:       #f1f5f6;
+    --surface:    #ffffff;
+    --line:       #dce5e8;
     --line-soft:  #e7edf1;
 
-    --amber:      #b87503;   /* status/warning           */
+    --amber:      #b87503;
     --amber-soft: #fdf3e0;
-    --green:      #17805f;   /* status/success           */
+    --green:      #17805f;
     --green-soft: #e4f1ec;
-    --red:        #be3a2b;   /* status/danger            */
+    --red:        #be3a2b;
     --red-soft:   #fbeae8;
 
-    --r-panel: 14px;         /* Figma card radius        */
-    --r-ctl:   10px;         /* Figma control radius     */
+    --r-panel: 14px;
+    --r-ctl:   10px;
 
-    --sidebar: 248px;        /* Figma sidebar width      */
+    --sidebar: 248px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -73,19 +51,13 @@ h1, h2, h3, .logo, .stat-num {
 a { color: var(--teal); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
-/* Icons inherit the text colour around them. */
 .ico { vertical-align: -0.18em; flex: 0 0 auto; }
 
-/* Keyboard users must always see where they are. */
 :focus-visible {
     outline: 3px solid var(--teal);
     outline-offset: 2px;
     border-radius: 4px;
 }
-
-/* ============================================================
-   SHELL - sidebar + content
-   ============================================================ */
 
 .shell { display: flex; min-height: 100vh; }
 
@@ -117,8 +89,6 @@ a:hover { text-decoration: underline; }
     letter-spacing: -0.02em;
 }
 
-/* Small capitalised label - a typographic detail that separates
-   groups without needing another box. */
 .nav-label {
     font-size: 10.5px;
     font-weight: 600;
@@ -145,8 +115,6 @@ a:hover { text-decoration: underline; }
 
 .navlinks a:hover { background: var(--line-soft); color: var(--ink); text-decoration: none; }
 
-/* The current page is marked by a filled tint plus a left bar -
-   not by colour alone, which colour-blind users cannot see. */
 .navlinks a.on {
     background: var(--teal-soft);
     color: var(--teal-dark);
@@ -184,7 +152,6 @@ a:hover { text-decoration: underline; }
 
 .btn-logout:hover { background: var(--red-soft); color: var(--red); text-decoration: none; }
 
-/* content column */
 .main { flex: 1; min-width: 0; }
 
 .container {
@@ -192,7 +159,6 @@ a:hover { text-decoration: underline; }
     padding: 34px 38px 70px;
 }
 
-/* logged-out pages have no sidebar */
 .plain-top {
     background: var(--surface);
     border-bottom: 1px solid var(--line);
@@ -211,10 +177,6 @@ a:hover { text-decoration: underline; }
 
 .plain-top .tagline { margin-left: auto; font-size: 13px; color: var(--ink-3); }
 .plain-wrap { max-width: 980px; margin: 0 auto; padding: 34px 24px 70px; }
-
-/* ============================================================
-   PAGE HEADINGS
-   ============================================================ */
 
 .page-head { margin-bottom: 24px; }
 
@@ -235,12 +197,6 @@ a:hover { text-decoration: underline; }
 .muted { color: var(--ink-3); font-size: 13.5px; margin-bottom: 16px; }
 .muted-inline { color: var(--ink-3); font-size: 13px; }
 
-/* ============================================================
-   PANELS
-   Hairline border, no shadow. The header strip is what gives a
-   panel structure - not a drop shadow.
-   ============================================================ */
-
 .card {
     background: var(--surface);
     border: 1px solid var(--line);
@@ -250,11 +206,6 @@ a:hover { text-decoration: underline; }
 }
 
 .card.next { background: transparent; border-style: dashed; }
-
-/* ============================================================
-   STATS - a single strip, divided by hairlines.
-   Four separate boxes in a row is the stock dashboard look.
-   ============================================================ */
 
 .stat-row {
     display: flex;
@@ -280,7 +231,7 @@ a:hover { text-decoration: underline; }
     font-size: 26px;
     font-weight: 700;
     line-height: 1.1;
-    /* tabular figures keep the columns aligned as numbers change */
+
     font-variant-numeric: tabular-nums;
 }
 
@@ -296,11 +247,7 @@ a:hover { text-decoration: underline; }
 
 .stat-sub { display: block; font-size: 12.5px; color: var(--ink-3); }
 
-/* ============================================================
-   TABLES
-   ============================================================ */
-
-.table-wrap { overflow-x: auto; }   /* stops wide tables breaking small screens */
+.table-wrap { overflow-x: auto; }
 
 table { width: 100%; border-collapse: collapse; font-size: 14px; }
 
@@ -326,12 +273,6 @@ tr:last-child td { border-bottom: none; }
 tbody tr:hover td, table tr:hover td { background: #fbfaf7; }
 
 td:first-child, th:first-child { padding-left: 2px; }
-
-/* ============================================================
-   PILLS AND STATUS
-   Status carries a dot as well as colour, so the meaning does
-   not depend on colour alone.
-   ============================================================ */
 
 .pill {
     display: inline-block;
@@ -381,10 +322,6 @@ td:first-child, th:first-child { padding-left: 2px; }
 .role-patient { background: var(--green-soft); color: var(--green); }
 .role-receptionist { background: #fdeee0; color: #9a5b12; }
 
-/* ============================================================
-   BUTTONS
-   ============================================================ */
-
 .btn {
     display: inline-flex;
     align-items: center;
@@ -419,10 +356,6 @@ td:first-child, th:first-child { padding-left: 2px; }
 
 .btn-ok { background: var(--green); border-color: var(--green); }
 .btn-ok:hover { background: #10513a; border-color: #10513a; }
-
-/* ============================================================
-   FORMS
-   ============================================================ */
 
 label {
     display: block;
@@ -464,8 +397,6 @@ input:focus, select:focus {
     flex-wrap: wrap;
 }
 
-/* Only draw the divider when a results table actually follows the
-   search bar - otherwise it leaves a rule with nothing under it. */
 .search-form:not(:last-child) {
     padding-bottom: 18px;
     margin-bottom: 4px;
@@ -487,10 +418,6 @@ input:focus, select:focus {
     margin-top: 5px;
 }
 
-/* ============================================================
-   ALERTS - an icon as well as a colour
-   ============================================================ */
-
 .alert-ok, .alert-error, .status-ok {
     display: flex;
     align-items: flex-start;
@@ -504,10 +431,6 @@ input:focus, select:focus {
 
 .alert-ok, .status-ok { background: var(--green-soft); border-color: #bfdccd; color: #114e37; }
 .alert-error { background: var(--red-soft); border-color: #efc9c4; color: #7d2424; }
-
-/* ============================================================
-   AUTH PAGES
-   ============================================================ */
 
 .auth-wrap { display: flex; justify-content: center; padding: 26px 0; }
 .auth-card { width: 420px; max-width: 100%; padding: 30px 30px 26px; }
@@ -543,17 +466,13 @@ code {
     color: var(--teal-dark);
 }
 
-/* ============================================================
-   LANDING PAGE
-   ============================================================ */
-
 .hero {
     background: var(--teal);
     color: #fff;
     border-radius: 16px;
     padding: 46px 40px;
     margin-bottom: 20px;
-    /* one subtle detail rather than a loud gradient */
+
     background-image: radial-gradient(circle at 88% 12%, rgba(255,255,255,.09), transparent 42%);
 }
 
@@ -586,11 +505,6 @@ code {
     margin-bottom: 5px;
 }
 
-/* ============================================================
-   DOCTOR CARDS
-   ============================================================ */
-
-/* Figma "Find a Doctor": three columns of vertical cards, not wide rows. */
 .doctor-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -615,7 +529,7 @@ code {
 
 .doctor-avatar {
     width: 50px; height: 50px; flex: 0 0 50px;
-    border-radius: 14px;              /* squircle, not another circle */
+    border-radius: 14px;
     background: var(--teal-soft);
     color: var(--teal-dark);
     font-family: "Figtree", sans-serif;
@@ -635,10 +549,6 @@ code {
 .doctor-meta { font-size: 13.5px; color: var(--ink-2); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .doctor-action { flex: 0 0 auto; }
 
-/* ============================================================
-   MISC
-   ============================================================ */
-
 .empty { color: var(--ink-3); font-size: 14.5px; padding: 26px 0; text-align: center; }
 .mt { margin-top: 16px; }
 
@@ -649,10 +559,6 @@ code {
     border-top: 1px solid var(--line);
     margin-top: 34px;
 }
-
-/* ============================================================
-   RESPONSIVE - the sidebar becomes a top strip on small screens
-   ============================================================ */
 
 @media (max-width: 860px) {
     .shell { flex-direction: column; }
@@ -684,18 +590,12 @@ code {
     .stat:last-child { border-bottom: none; }
 }
 
-/* Users who ask their system for less motion get none. */
 @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; animation: none !important; }
 }
 
-/* buttons that sit side by side, including a one-button form */
 .row-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .row-actions form { margin: 0; }
-
-/* ---------- booking: day cards and slot chips ----------
-   Matches the "Book Appointment" screen in the Figma file: a row of seven
-   day cards, then the time slots as a grid of chips with a small key. */
 
 .daystrip {
     display: grid;
@@ -771,7 +671,6 @@ code {
     .slotgrid { grid-template-columns: repeat(2, 1fr); }
 }
 
-/* ---------- filter tabs (My Appointments) ---------- */
 .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
 .tab {
     display: inline-flex; align-items: center; gap: 7px;
@@ -792,16 +691,11 @@ code {
 .tab.on { background: var(--teal); border-color: var(--teal); color: #fff; }
 .tab.on span { background: rgba(255,255,255,.22); color: #fff; }
 
-/* ---------- front desk: queue + walk-in panel side by side ---------- */
 .desk { display: grid; grid-template-columns: minmax(0,1fr) 320px; gap: 20px; align-items: start; }
 .desk-main { min-width: 0; }
 .desk-side .card { position: sticky; top: 20px; }
 .desk-side label { margin-top: 12px; }
 @media (max-width: 1060px) { .desk { grid-template-columns: 1fr; } .desk-side .card { position: static; } }
-
-/* ---------- split auth layout (Login / Register) ----------
-   Figma screens "01 - Login" and "02 - Register": a teal brand panel on
-   the left, the form card centred on the page background to the right. */
 
 .split { display: grid; grid-template-columns: 560px minmax(0, 1fr); min-height: 100vh; }
 
@@ -820,8 +714,7 @@ code {
     font-size: 22px; font-weight: 700; letter-spacing: -.01em;
     margin-bottom: 4px;
 }
-/* The mark is a filled rect (currentColor) with a white pulse line. On the
-   teal panel invert it: white rect, teal line. */
+
 .split-logo svg { color: #fff; }
 .split-logo svg path { stroke: var(--teal); }
 .split-title {
@@ -854,7 +747,6 @@ code {
     .split-form { padding: 32px 20px; }
 }
 
-/* Register: narrower brand panel and a wider card, matching the design. */
 .split-brand-narrow { padding: 80px 64px; }
 .auth-card-wide { max-width: none; }
 .split-form .auth-card-wide { max-width: 560px; }

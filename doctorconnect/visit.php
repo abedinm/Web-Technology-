@@ -1,14 +1,5 @@
 <?php
-// ============================================================
-// visit.php - WRITE THE VISIT NOTE AND CLOSE THE APPOINTMENT
-//
-// Opened from the doctor's schedule. It shows who the patient is,
-// takes a diagnosis and a note, and marks the appointment completed.
-//
-// The appointment is loaded with "WHERE appt_id = ? AND doctor_id = ?",
-// so changing the id in the address bar cannot open an appointment
-// that belongs to a different doctor.
-// ============================================================
+
 include "auth.php";
 require_role("doctor");
 
@@ -25,9 +16,7 @@ $apptId   = isset($_GET["id"]) ? (int) $_GET["id"] : 0;
 $error   = "";
 $message = "";
 
-// ---------- save ----------
 if (isset($_POST["submit"])) {
-
     $apptId    = (int) $_POST["appt_id"];
     $diagnosis = test_input($_POST["diagnosis"]);
     $note      = test_input($_POST["visit_note"]);
@@ -35,8 +24,6 @@ if (isset($_POST["submit"])) {
     if ($diagnosis == "") {
         $error = "Please write at least a short diagnosis.";
     } else {
-
-        // The doctor_id in the WHERE clause is the ownership check.
         $stmt = mysqli_prepare($conn,
             "UPDATE appointments
              SET diagnosis = ?, visit_note = ?, status = 'completed'
@@ -55,7 +42,6 @@ if (isset($_POST["submit"])) {
     }
 }
 
-// ---------- load the appointment ----------
 $stmt = mysqli_prepare($conn,
     "SELECT a.appt_id, a.appt_date, a.time_slot, a.status, a.diagnosis, a.visit_note,
             p.full_name AS patient_name, p.email AS patient_email, p.phone AS patient_phone,

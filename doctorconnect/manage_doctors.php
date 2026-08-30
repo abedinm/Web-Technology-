@@ -1,21 +1,12 @@
 <?php
-// ============================================================
-// manage_doctors.php - ADMIN: ADD, EDIT AND REMOVE DOCTORS
-//
-// A doctor is two rows: the login in users, and the professional
-// details in doctors. Adding one therefore writes to both tables,
-// and removing one deletes both - but only when that doctor has no
-// appointments, because appointments.doctor_id points at them.
-// ============================================================
+
 include "auth.php";
 require_role("admin");
 
 $error   = "";
 $message = "";
 
-// ---------- add a doctor ----------
 if (isset($_POST["add"])) {
-
     $name  = test_input($_POST["full_name"]);
     $email = test_input($_POST["email"]);
     $phone = test_input($_POST["phone"]);
@@ -28,17 +19,11 @@ if (isset($_POST["add"])) {
 
     if ($name == "" || $email == "" || $pass == "" || $deptId == 0) {
         $error = "Name, email, password and department are required.";
-
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = "Please enter a valid email address.";
-
     } elseif (!is_numeric($fee) || $fee < 0) {
         $error = "The consultation fee must be a number.";
-
     } else {
-
-        // The email column is UNIQUE, so check before inserting and
-        // give a clear message instead of a database error.
         $stmt = mysqli_prepare($conn, "SELECT user_id FROM users WHERE email = ?");
         mysqli_stmt_bind_param($stmt, "s", $email);
         mysqli_stmt_execute($stmt);
@@ -48,7 +33,6 @@ if (isset($_POST["add"])) {
         if ($taken) {
             $error = "That email is already registered.";
         } else {
-
             $hash = password_hash($pass, PASSWORD_DEFAULT);
 
             $stmt = mysqli_prepare($conn,
@@ -77,9 +61,7 @@ if (isset($_POST["add"])) {
     }
 }
 
-// ---------- update a doctor ----------
 if (isset($_POST["update"])) {
-
     $doctorId = (int) $_POST["doctor_id"];
     $deptId   = (int) $_POST["dept_id"];
     $spec     = test_input($_POST["specialization"]);
@@ -101,13 +83,9 @@ if (isset($_POST["update"])) {
     }
 }
 
-// ---------- remove a doctor ----------
 if (isset($_POST["remove"])) {
-
     $doctorId = (int) $_POST["doctor_id"];
 
-    // Appointments point at this doctor. Deleting the row while those
-    // exist would break the foreign key, so refuse and explain.
     $stmt = mysqli_prepare($conn, "SELECT COUNT(*) AS total FROM appointments WHERE doctor_id = ?");
     mysqli_stmt_bind_param($stmt, "i", $doctorId);
     mysqli_stmt_execute($stmt);
@@ -117,8 +95,6 @@ if (isset($_POST["remove"])) {
     if ($used["total"] > 0) {
         $error = "This doctor has " . $used["total"] . " appointment(s) and cannot be removed.";
     } else {
-
-        // Find the login row before the doctors row is gone.
         $stmt = mysqli_prepare($conn, "SELECT user_id FROM doctors WHERE doctor_id = ?");
         mysqli_stmt_bind_param($stmt, "i", $doctorId);
         mysqli_stmt_execute($stmt);

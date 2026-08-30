@@ -1,27 +1,17 @@
 <?php
-// ============================================================
-// manage_departments.php - ADMIN: THE DEPARTMENT LIST
-//
-// Departments are what patients filter doctors by, so the list is
-// short and rarely changes. A department that still has doctors in
-// it cannot be deleted, because doctors.dept_id points at it.
-// ============================================================
+
 include "auth.php";
 require_role("admin");
 
 $error   = "";
 $message = "";
 
-// ---------- add ----------
 if (isset($_POST["add"])) {
-
     $name = test_input($_POST["dept_name"]);
 
     if ($name == "") {
         $error = "Please type a department name.";
     } else {
-
-        // dept_name is UNIQUE, so look first and explain clearly.
         $stmt = mysqli_prepare($conn, "SELECT dept_id FROM departments WHERE dept_name = ?");
         mysqli_stmt_bind_param($stmt, "s", $name);
         mysqli_stmt_execute($stmt);
@@ -40,9 +30,7 @@ if (isset($_POST["add"])) {
     }
 }
 
-// ---------- rename ----------
 if (isset($_POST["rename"])) {
-
     $deptId = (int) $_POST["dept_id"];
     $name   = test_input($_POST["dept_name"]);
 
@@ -57,9 +45,7 @@ if (isset($_POST["rename"])) {
     }
 }
 
-// ---------- delete ----------
 if (isset($_POST["remove"])) {
-
     $deptId = (int) $_POST["dept_id"];
 
     $stmt = mysqli_prepare($conn, "SELECT COUNT(*) AS total FROM doctors WHERE dept_id = ?");
@@ -79,7 +65,6 @@ if (isset($_POST["remove"])) {
     }
 }
 
-// The doctor count per department, so the admin can see what is in use.
 $departments = mysqli_query($conn,
     "SELECT dep.dept_id, dep.dept_name, COUNT(d.doctor_id) AS doctors
      FROM departments dep

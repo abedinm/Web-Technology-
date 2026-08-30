@@ -1,19 +1,10 @@
 <?php
-// ============================================================
-// book.php - BOOK AN APPOINTMENT  (Patient feature 2)
-//
-// The doctor's id arrives in the URL ($_GET), the booking details
-// are sent by the form ($_POST). Before saving we check that the
-// same doctor does not already have that slot taken.
-// ============================================================
+
 include "auth.php";
 require_role("patient");
 
-// intval() forces the URL value to be a whole number. A patient
-// could type anything after ?doctor_id= so we never trust it raw.
 $doctorId = isset($_GET["doctor_id"]) ? intval($_GET["doctor_id"]) : 0;
 
-// Load the doctor being booked.
 $stmt = mysqli_prepare($conn,
     "SELECT d.doctor_id, u.full_name, dep.dept_name, d.specialization,
             d.consultation_fee, d.available_time
@@ -26,13 +17,11 @@ mysqli_stmt_execute($stmt);
 $doctor = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
 mysqli_stmt_close($stmt);
 
-// No such doctor? Back to the search page.
 if (!$doctor) {
     header("Location: doctors.php");
     exit();
 }
 
-// The time slots a patient may choose.
 $slots = array(
     "9:00 AM - 9:30 AM", "10:00 AM - 10:30 AM", "11:00 AM - 11:30 AM",
     "4:00 PM - 4:30 PM", "5:00 PM - 5:30 PM", "6:00 PM - 6:30 PM",
@@ -42,9 +31,6 @@ $slots = array(
 $error = "";
 $slot  = "";
 
-// The day cards reload the page with ?date=YYYY-MM-DD, so read that first
-// and fall back to today. A malformed value in the URL is ignored rather
-// than passed on to the query below.
 if (isset($_GET["date"]) && preg_match("/^\d{4}-\d{2}-\d{2}$/", $_GET["date"])) {
     $date = $_GET["date"];
 } else {
@@ -52,23 +38,16 @@ if (isset($_GET["date"]) && preg_match("/^\d{4}-\d{2}-\d{2}$/", $_GET["date"])) 
 }
 
 if (isset($_POST["submit"])) {
-
     $date = test_input($_POST["appt_date"]);
     $slot = test_input($_POST["time_slot"]);
 
     if ($date == "" || $slot == "") {
         $error = "Please choose both a date and a time slot.";
-
     } elseif ($date < date("Y-m-d")) {
-        // date("Y-m-d") is today. A booking in the past makes no sense.
         $error = "You cannot book a date in the past.";
-
     } elseif (!in_array($slot, $slots)) {
         $error = "That time slot is not available.";
-
     } else {
-        // Is this doctor already booked at that date and time?
-        // Cancelled bookings do not block the slot.
         $stmt = mysqli_prepare($conn,
             "SELECT appt_id FROM appointments
              WHERE doctor_id = ? AND appt_date = ? AND time_slot = ?
@@ -82,8 +61,6 @@ if (isset($_POST["submit"])) {
         if ($taken) {
             $error = "That slot is already booked. Please pick another time.";
         } else {
-            // Save the appointment. status defaults to 'pending' until
-            // the doctor confirms it.
             $stmt = mysqli_prepare($conn,
                 "INSERT INTO appointments (patient_id, doctor_id, appt_date, time_slot)
                  VALUES (?, ?, ?, ?)");
@@ -91,16 +68,12 @@ if (isset($_POST["submit"])) {
             mysqli_stmt_execute($stmt);
             mysqli_stmt_close($stmt);
 
-            // Redirect after a successful POST so a page refresh does
-            // not book the same appointment twice.
             header("Location: my_appointments.php?booked=1");
             exit();
         }
     }
 }
 
-// Which slots are already gone for the date being viewed? Used to
-// grey out the taken ones in the dropdown.
 $takenSlots = array();
 if ($date != "") {
     $stmt = mysqli_prepare($conn,
@@ -159,13 +132,9 @@ include "header.php";
 
         <label>Select a date</label>
 
-        <!-- Seven days as tappable cards, the way the Figma design shows it.
-             The real value still travels in a hidden field so the PHP above
-             is unchanged. -->
         <div class="daystrip">
             <?php
             for ($d = 0; $d < 7; $d++) {
-
                 $stamp = strtotime("+$d day");
                 $value = date("Y-m-d", $stamp);
                 $on    = ($date == $value);
@@ -183,8 +152,6 @@ include "header.php";
 
         <label>Available time slots</label>
 
-        <!-- Slots as a grid of chips. A booked slot is shown flat and cannot
-             be chosen, which is clearer than a disabled <option>. -->
         <div class="slotgrid">
             <?php foreach ($slots as $s): ?>
                 <?php $isTaken = in_array($s, $takenSlots); ?>
@@ -214,15 +181,10 @@ include "header.php";
 </div>
 
 <script>
-// The date cards and slot chips are buttons. Clicking one writes its value
-// into the matching hidden input, so the form still submits exactly the
-// same two fields the PHP at the top of this file expects.
 
 var dateField = document.getElementById("appt_date");
 var slotField = document.getElementById("time_slot");
 
-// Choosing a date reloads the page, because which slots are already taken
-// depends on the date and that answer lives on the server.
 document.querySelectorAll(".daystrip .day").forEach(function (btn) {
     btn.addEventListener("click", function () {
         var url = new URL(window.location.href);

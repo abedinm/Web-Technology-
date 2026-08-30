@@ -1,19 +1,10 @@
 <?php
-// ============================================================
-// patient_dashboard.php - PATIENT HOME
-//
-// Follows the dashboard layout from the Figma design: a greeting,
-// three summary figures, the one appointment that comes next, and
-// a short history table underneath.
-// ============================================================
+
 include "auth.php";
 require_role("patient");
 
 $patientId = $_SESSION["user_id"];
 
-// ---------- summary figures ----------
-// One grouped query answers "how many of each status", which is
-// cheaper than running four separate COUNT queries.
 $stmt = mysqli_prepare($conn,
     "SELECT status, COUNT(*) AS total FROM appointments WHERE patient_id = ? GROUP BY status");
 mysqli_stmt_bind_param($stmt, "i", $patientId);
@@ -26,18 +17,12 @@ while ($row = mysqli_fetch_assoc($result)) {
 }
 mysqli_stmt_close($stmt);
 
-// "Upcoming" means still to happen: booked but not finished.
 $upcomingCount = $counts["pending"] + $counts["confirmed"];
 
-// How many departments the hospital offers. No user input, so no
-// parameters are needed here.
 $deptResult = mysqli_query($conn, "SELECT COUNT(*) AS total FROM departments");
 $deptRow    = mysqli_fetch_assoc($deptResult);
 $deptCount  = $deptRow["total"];
 
-// ---------- the next appointment ----------
-// Only appointments from today onwards can be "next", so past dates
-// are filtered out. LIMIT 1 takes the soonest one.
 $stmt = mysqli_prepare($conn,
     "SELECT a.appt_id, a.appt_date, a.time_slot, a.status,
             u.full_name AS doctor_name, dep.dept_name, d.consultation_fee, d.room
@@ -55,7 +40,6 @@ mysqli_stmt_execute($stmt);
 $next = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
 mysqli_stmt_close($stmt);
 
-// ---------- recent history ----------
 $stmt = mysqli_prepare($conn,
     "SELECT a.appt_id, a.appt_date, a.time_slot, a.status,
             u.full_name AS doctor_name, dep.dept_name
@@ -70,7 +54,6 @@ mysqli_stmt_bind_param($stmt, "i", $patientId);
 mysqli_stmt_execute($stmt);
 $recent = mysqli_stmt_get_result($stmt);
 
-// Greet by the time of day, and use only the first name.
 $hour = (int) date("G");
 if ($hour < 12) {
     $greeting = "Good morning";
@@ -127,13 +110,9 @@ include "header.php";
             &middot; <span class="status status-<?php echo $next["status"]; ?>"><?php echo $next["status"]; ?></span>
         </p>
 
-        <!-- A div, not a p: a <form> is not allowed inside a paragraph,
-             and the browser would close the p early and break the row. -->
         <div class="mt row-actions">
             <a href="my_appointments.php" class="btn btn-small">View details</a>
 
-            <!-- Cancelling changes data, so it is a POST, not a link.
-                 my_appointments.php already contains the cancel logic. -->
             <form method="POST" action="my_appointments.php" class="inline-form"
                   onsubmit="return confirm('Cancel this appointment?')">
                 <input type="hidden" name="appt_id" value="<?php echo $next["appt_id"]; ?>">

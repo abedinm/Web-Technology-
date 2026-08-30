@@ -1,15 +1,11 @@
 <?php
-// header.php - the shell of every page.
-// Logged in  -> sidebar navigation built from the user's role.
-// Logged out -> a plain top strip.
-// Included AFTER auth.php, because this file prints HTML.
+
 include_once "icons.php";
 
 $pageTitle = isset($pageTitle) ? $pageTitle : "DoctorConnect";
 $role = isset($_SESSION["role"]) ? $_SESSION["role"] : "";
 $here = basename($_SERVER["PHP_SELF"]);
 
-// Initials for the little avatar, e.g. "Nusrat Jahan" -> "NJ".
 $initials = "";
 if (isset($_SESSION["full_name"])) {
     $bits = explode(" ", str_replace("Dr. ", "", $_SESSION["full_name"]));
@@ -19,7 +15,6 @@ if (isset($_SESSION["full_name"])) {
     }
 }
 
-// One helper instead of repeating the same anchor six times.
 function navlink($file, $label, $iconName, $here) {
     $on = ($here == $file) ? " class=\"on\"" : "";
     echo '<a href="' . $file . '"' . $on . '>' . icon($iconName) . '<span>' . $label . '</span></a>';
@@ -59,16 +54,13 @@ function navlink($file, $label, $iconName, $here) {
                 navlink("patient_dashboard.php", "Dashboard",       "grid",     $here);
                 navlink("doctors.php",           "Find Doctors",    "search",   $here);
                 navlink("my_appointments.php",   "My Appointments", "calendar", $here);
-
             } elseif ($role == "doctor") {
                 navlink("doctor_dashboard.php",  "Appointments",    "calendar",     $here);
                 navlink("doctor_profile.php",    "My Profile",      "stethoscope",  $here);
-
             } elseif ($role == "receptionist") {
                 navlink("reception_dashboard.php", "Front Desk",    "clock",    $here);
                 navlink("walkin.php",              "Book Walk-in",  "plus",     $here);
                 navlink("doctors.php",             "Doctors",       "search",   $here);
-
             } elseif ($role == "admin") {
                 navlink("admin_dashboard.php",     "Overview",    "grid",     $here);
                 navlink("manage_doctors.php",      "Doctors",     "users",    $here);
@@ -98,9 +90,6 @@ function navlink($file, $label, $iconName, $here) {
         <div class="container">
 
 <?php elseif (!empty($authSplit)): ?>
-
-<!-- Login and register use the split layout from the Figma design, so they
-     draw their own shell instead of the plain top strip below. -->
 
 <?php else: ?>
 

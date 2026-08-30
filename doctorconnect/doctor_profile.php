@@ -1,11 +1,5 @@
 <?php
-// ============================================================
-// doctor_profile.php - THE DOCTOR'S OWN DETAILS
-//
-// A doctor may change their specialization, consultation fee and
-// visiting hours. The department is set by the admin, so it is
-// shown here but cannot be edited.
-// ============================================================
+
 include "auth.php";
 require_role("doctor");
 
@@ -28,7 +22,6 @@ $available      = $doctor["available_time"];
 $room           = $doctor["room"];
 
 if (isset($_POST["submit"])) {
-
     $specialization = test_input($_POST["specialization"]);
     $available      = test_input($_POST["available_time"]);
     $room           = test_input($_POST["room"]);
@@ -36,10 +29,8 @@ if (isset($_POST["submit"])) {
 
     if ($specialization == "" || $available == "") {
         $error = "Specialization and visiting hours cannot be empty.";
-
     } elseif (!is_numeric($fee) || $fee < 0) {
         $error = "The consultation fee must be a number.";
-
     } else {
         $fee = (float) $fee;
 
@@ -58,7 +49,6 @@ if (isset($_POST["submit"])) {
     }
 }
 
-// The department name lives in its own table.
 $stmt = mysqli_prepare($conn, "SELECT dept_name FROM departments WHERE dept_id = ?");
 mysqli_stmt_bind_param($stmt, "i", $doctor["dept_id"]);
 mysqli_stmt_execute($stmt);

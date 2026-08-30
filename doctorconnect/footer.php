@@ -1,5 +1,5 @@
 <?php
-// footer.php - closes whichever shell header.php opened.
+
 $role = isset($_SESSION["role"]) ? $_SESSION["role"] : "";
 ?>
 <?php if (empty($authSplit)): ?>
@@ -9,11 +9,11 @@ $role = isset($_SESSION["role"]) ? $_SESSION["role"] : "";
 <?php endif; ?>
 
 <?php if (is_logged_in()): ?>
-        </div><!-- .container -->
+        </div>
     </main>
-</div><!-- .shell -->
+</div>
 <?php elseif (empty($authSplit)): ?>
-</div><!-- .plain-wrap -->
+</div>
 <?php endif; ?>
 
 </body>

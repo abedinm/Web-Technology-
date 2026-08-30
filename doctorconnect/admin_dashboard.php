@@ -1,15 +1,8 @@
 <?php
-// ============================================================
-// admin_dashboard.php - HOSPITAL OVERVIEW
-//
-// Counts across the whole system, plus the newest bookings, so the
-// admin can see the state of the hospital on one screen.
-// ============================================================
+
 include "auth.php";
 require_role("admin");
 
-// Small helper: run a COUNT query and hand back the number.
-// These queries take no user input, so they need no parameters.
 function count_rows($conn, $sql) {
     $result = mysqli_query($conn, $sql);
     if (!$result) {
@@ -24,15 +17,12 @@ $patientCount = count_rows($conn, "SELECT COUNT(*) AS total FROM users WHERE rol
 $deptCount    = count_rows($conn, "SELECT COUNT(*) AS total FROM departments");
 $apptCount    = count_rows($conn, "SELECT COUNT(*) AS total FROM appointments");
 
-// Appointments grouped by status, for the second row of cards.
 $counts = array("pending" => 0, "confirmed" => 0, "completed" => 0, "cancelled" => 0);
 $result = mysqli_query($conn, "SELECT status, COUNT(*) AS total FROM appointments GROUP BY status");
 while ($row = mysqli_fetch_assoc($result)) {
     $counts[$row["status"]] = $row["total"];
 }
 
-// How busy is each department? A LEFT JOIN keeps a department in the
-// list even when it has no doctors yet, which an INNER JOIN would hide.
 $byDept = mysqli_query($conn,
     "SELECT dep.dept_name,
             COUNT(DISTINCT d.doctor_id) AS doctors,
@@ -43,7 +33,6 @@ $byDept = mysqli_query($conn,
      GROUP BY dep.dept_id, dep.dept_name
      ORDER BY appointments DESC, dep.dept_name");
 
-// The ten most recent bookings.
 $recent = mysqli_query($conn,
     "SELECT a.appt_id, a.appt_date, a.time_slot, a.status,
             p.full_name AS patient_name,

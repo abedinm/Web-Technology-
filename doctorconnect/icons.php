@@ -1,14 +1,4 @@
 <?php
-// ============================================================
-// icons.php - INLINE SVG ICON SET
-//
-// One consistent icon family, all drawn with the same 1.6 stroke
-// width and rounded caps so they look like one set. SVG scales
-// without blurring and takes its colour from the CSS around it,
-// which a PNG or an emoji cannot do.
-//
-// Usage:  echo icon("calendar");
-// ============================================================
 
 function icon($name, $size = 18) {
     $paths = array(
@@ -63,7 +53,6 @@ function icon($name, $size = 18) {
          . 'aria-hidden="true" focusable="false">' . $paths[$name] . '</svg>';
 }
 
-// The DoctorConnect logo mark: a pulse line inside a rounded square.
 function logo_mark($size = 30) {
     return '<svg width="' . $size . '" height="' . $size . '" viewBox="0 0 32 32" fill="none" aria-hidden="true">'
          . '<rect width="32" height="32" rx="9" fill="currentColor"/>'

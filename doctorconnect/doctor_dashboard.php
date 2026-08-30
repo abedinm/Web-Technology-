@@ -1,23 +1,10 @@
 <?php
-// ============================================================
-// doctor_dashboard.php - THE DOCTOR'S DAY
-//
-// Lists every appointment belonging to the logged-in doctor for
-// one chosen date. The doctor opens a visit from here to write
-// the note and mark it completed.
-//
-// A doctor logs in as a user, but the appointments table points at
-// doctors.doctor_id, so current_doctor() looks that row up first.
-// Every query below is filtered by that id, which is how one doctor
-// is prevented from seeing another doctor's patients.
-// ============================================================
+
 include "auth.php";
 require_role("doctor");
 
 $doctor = current_doctor($conn);
 
-// A user with the doctor role but no row in the doctors table cannot
-// have appointments, so say so rather than showing an empty page.
 if (!$doctor) {
     $pageTitle = "Appointments";
     include "header.php";
@@ -29,7 +16,6 @@ if (!$doctor) {
 
 $doctorId = $doctor["doctor_id"];
 
-// ---------- which day ----------
 $today = date("Y-m-d");
 $date  = isset($_GET["date"]) ? test_input($_GET["date"]) : $today;
 
@@ -37,7 +23,6 @@ if (!preg_match("/^\d{4}-\d{2}-\d{2}$/", $date)) {
     $date = $today;
 }
 
-// ---------- the day's list ----------
 $stmt = mysqli_prepare($conn,
     "SELECT a.appt_id, a.time_slot, a.status, a.diagnosis,
             p.full_name AS patient_name, p.phone AS patient_phone
@@ -55,7 +40,6 @@ while ($row = mysqli_fetch_assoc($result)) {
 }
 mysqli_stmt_close($stmt);
 
-// ---------- counters ----------
 $total = count($rows);
 $done  = 0;
 $left  = 0;
@@ -68,7 +52,6 @@ foreach ($rows as $r) {
     }
 }
 
-// Money the doctor can expect from the visits that actually happen.
 $expected = $left * $doctor["consultation_fee"];
 
 $pageTitle = "Appointments";
