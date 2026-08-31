@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PHP Quiz Revision</title>
+<style>
+@page { size: A4; margin: 15mm 14mm 14mm 14mm; }
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size:10pt; line-height:1.5; color:#15131c; background:#fff;
+}
+code,pre{font-family:"SF Mono",Menlo,Consolas,"Courier New",monospace}
+
+/* ---------- title ---------- */
+.title{border-bottom:2.5pt solid #4a4590; padding-bottom:9pt; margin-bottom:14pt}
+.course{
+  font-size:7.5pt; letter-spacing:.13em; text-transform:uppercase;
+  font-weight:700; color:#4a4590; margin-bottom:5pt;
+}
+h1{font-size:23pt; font-weight:800; letter-spacing:-.02em; margin:0 0 6pt; line-height:1.05}
+.meta{font-size:9pt; color:#55506a; margin:0}
+
+/* ---------- how to use ---------- */
+.howto{
+  border:1pt solid #c9c4e0; background:#f6f5fb; border-radius:4pt;
+  padding:10pt 13pt; margin-bottom:15pt;
+}
+.howto h2{
+  font-size:9.5pt; letter-spacing:.09em; text-transform:uppercase;
+  color:#4a4590; margin:0 0 7pt; border:0; padding:0;
+}
+.howto ol{margin:0; padding-left:15pt}
+.howto li{margin-bottom:4pt; font-size:9.5pt}
+.howto li:last-child{margin-bottom:0}
+.howto strong{color:#15131c}
+
+/* ---------- sections ---------- */
+section{margin-bottom:15pt}
+h2{
+  font-size:13pt; font-weight:800; letter-spacing:-.01em;
+  margin:0 0 3pt; padding-bottom:3pt; border-bottom:.75pt solid #d6d1e6;
+  page-break-after:avoid;
+}
+h2 .num{
+  display:inline-block; min-width:17pt;
+  color:#4a4590; font-variant-numeric:tabular-nums;
+}
+.why{
+  font-size:8.5pt; color:#6a6480; margin:0 0 7pt; font-style:italic;
+}
+h3{font-size:9.5pt; font-weight:700; margin:9pt 0 4pt; page-break-after:avoid}
+p{margin:0 0 7pt}
+
+pre{
+  background:#f7f6fa; border:.75pt solid #ddd8ea; border-left:2.5pt solid #4a4590;
+  border-radius:0 3pt 3pt 0; padding:7pt 9pt; margin:0 0 8pt;
+  font-size:8.5pt; line-height:1.5; white-space:pre-wrap;
+  page-break-inside:avoid;
+}
+:not(pre)>code{
+  background:#f0eef7; padding:.5pt 3pt; border-radius:2pt;
+  font-size:8.5pt; color:#3d3878;
+}
+.cm{color:#7c768f}
+
+.rule{
+  page-break-inside:avoid;
+  border-left:2.5pt solid #b8342f; background:#fdf4f4;
+  padding:6pt 10pt; margin:0 0 8pt; font-size:9pt; border-radius:0 3pt 3pt 0;
+}
+.rule strong{color:#8f2a26}
+
+table{border-collapse:collapse; width:100%; font-size:8.5pt; margin:0 0 8pt; page-break-inside:avoid}
+th,td{border:.75pt solid #d6d1e6; padding:4pt 7pt; text-align:left; vertical-align:top}
+th{background:#f0eef7; font-weight:700; font-size:8pt}
+td:first-child{width:22%; font-weight:600}
+
+.check{list-style:none; margin:0; padding:0}
+.check li{
+  border-bottom:.5pt solid #e2ddee; padding:5pt 0 5pt 22pt;
+  position:relative; font-size:9.5pt;
+}
+.check li:last-child{border-bottom:0}
+.check li::before{
+  content:"";
+  position:absolute; left:0; top:6.5pt;
+  width:9pt; height:9pt; border:1pt solid #8a84a8; border-radius:1.5pt;
+}
+
+footer{
+  margin-top:14pt; padding-top:7pt; border-top:.75pt solid #d6d1e6;
+  font-size:8pt; color:#6a6480; text-align:center;
+}
+.pagebreak{page-break-before:always}
+</style>
+</head>
+<body>
+
+<div class="title">
+  <div class="course">CSC 3215 &nbsp;&middot;&nbsp; Web Technologies &nbsp;&middot;&nbsp; Final-Term Quiz 2 &nbsp;&middot;&nbsp; 01 September</div>
+  <h1>PHP Quiz Revision</h1>
+  <p class="meta">Seven blocks, ranked by marks per minute. Syllabus: PHP basics, arrays, loops, functions, classes, forms, validation, superglobals, file upload, cookies, sessions, authentication, AJAX, JSON.</p>
+</div>
+
+<div class="howto">
+  <h2>How to use this</h2>
+  <ol>
+    <li><strong>Go in order.</strong> Blocks 1&ndash;4 are the ones most likely to appear as &ldquo;write the code&rdquo; questions. If you run out of time, stop wherever you are &mdash; you will still have covered the highest-value material.</li>
+    <li><strong>Do not just read it.</strong> Reading PHP creates a false feeling of understanding that disappears in front of a blank answer script.</li>
+    <li><strong>Copy each block out by hand.</strong> Then cover the page and write it again from memory. The second attempt is the one that tells you what you actually know.</li>
+    <li><strong>Block 5 is free marks.</strong> Three comparison tables, pure recall, nothing to understand. Learn them even if you learn nothing else.</li>
+    <li><strong>Finish with the checklist</strong> on the last page. Every item is something you write on blank paper, not something you review.</li>
+  </ol>
+</div>
+
+<section>
+  <h2><span class="num">1</span>Cookies</h2>
+  <p class="why">Small, fixed shape, asked almost every time.</p>
+<pre><code>setcookie("user", "Minhaz", time() + 86400, "/");   <span class="cm">// set, lasts 1 day</span>
+
+echo $_COOKIE["user"];                              <span class="cm">// read</span>
+
+setcookie("user", "", time() - 3600, "/");          <span class="cm">// delete</span></code></pre>
+  <div class="rule">
+    <strong>Three things they test:</strong> there is no <code>deletecookie()</code> &mdash; you delete by setting it again with a <em>past</em> time. <code>setcookie()</code> must run before any HTML output. A cookie you just set is not readable until the <em>next</em> page load.
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">2</span>Sessions</h2>
+  <p class="why">Four function calls cover nearly the whole topic.</p>
+<pre><code>&lt;?php
+session_start();                     <span class="cm">// ALWAYS the first line, before any HTML</span>
+
+$_SESSION["user"] = "Minhaz";        <span class="cm">// save</span>
+
+echo $_SESSION["user"];              <span class="cm">// read</span>
+
+session_unset();                     <span class="cm">// clear the variables</span>
+session_destroy();                   <span class="cm">// destroy the session (logout)</span>
+?&gt;</code></pre>
+  <h3>Guarding a page &mdash; blocks anyone not logged in</h3>
+<pre><code>&lt;?php
+session_start();
+
+if (!isset($_SESSION["user"])) {
+    header("Location: login.php");
+    exit();
+}
+?&gt;</code></pre>
+  <div class="rule">
+    <strong>Two marks people lose:</strong> every page that touches <code>$_SESSION</code> needs its own <code>session_start()</code>. And always put <code>exit();</code> after <code>header("Location: ...")</code>, or the rest of the script keeps running.
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">3</span>Form handling and validation</h2>
+  <p class="why">The standard &ldquo;write a form handler&rdquo; answer.</p>
+<pre><code>&lt;?php
+if (isset($_POST["submit"])) {
+
+    $name  = trim($_POST["name"]);
+    $email = trim($_POST["email"]);
+
+    if ($name == "" || $email == "") {
+        echo "All fields are required.";
+
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo "Please enter a valid email address.";
+
+    } else {
+        echo "Welcome " . htmlspecialchars($name);
+    }
+}
+?&gt;
+
+&lt;form method="POST"&gt;
+    &lt;input type="text" name="name"&gt;
+    &lt;input type="text" name="email"&gt;
+    &lt;button type="submit" name="submit"&gt;Send&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+  <div class="rule">
+    <strong>Remember:</strong> the <code>name</code> attribute is the key you read in <code>$_POST</code> &mdash; a field with no <code>name</code> is never submitted. <code>htmlspecialchars()</code> is what stops XSS, and it is worth a mark on its own.
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">4</span>File upload</h2>
+  <p class="why">Fixed shape, short, and a very common code question.</p>
+<pre><code>&lt;form method="POST" enctype="multipart/form-data"&gt;
+    &lt;input type="file" name="photo"&gt;
+    &lt;button type="submit" name="upload"&gt;Upload&lt;/button&gt;
+&lt;/form&gt;
+
+&lt;?php
+if (isset($_POST["upload"])) {
+
+    $name = $_FILES["photo"]["name"];       <span class="cm">// original filename</span>
+    $tmp  = $_FILES["photo"]["tmp_name"];   <span class="cm">// temporary location</span>
+    $size = $_FILES["photo"]["size"];       <span class="cm">// bytes</span>
+    $ext  = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+
+    if (!in_array($ext, array("jpg", "jpeg", "png"))) {
+        echo "Only JPG and PNG are allowed.";
+
+    } elseif ($size &gt; 2000000) {
+        echo "File must be under 2 MB.";
+
+    } elseif (move_uploaded_file($tmp, "uploads/" . $name)) {
+        echo "Uploaded successfully.";
+
+    } else {
+        echo "Upload failed.";
+    }
+}
+?&gt;</code></pre>
+  <div class="rule">
+    <strong>The two marks that decide this question:</strong> <code>enctype="multipart/form-data"</code> on the form &mdash; without it the file never arrives and <code>$_FILES</code> is empty. And <code>move_uploaded_file()</code> &mdash; without it PHP deletes the temp file when the script ends, so the code &ldquo;runs fine&rdquo; and uploads nothing.
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">5</span>The three tables &mdash; free marks</h2>
+  <p class="why">Pure memorisation. Nothing to understand, and near-certain to appear.</p>
+
+  <h3>Server-side (PHP) vs client-side (JavaScript)</h3>
+  <table>
+    <tr><th></th><th>PHP &mdash; server</th><th>JavaScript &mdash; client</th></tr>
+    <tr><td>Runs on</td><td>The web server</td><td>The user's browser</td></tr>
+    <tr><td>Code visible</td><td>No, only output is sent</td><td>Yes, View Source shows it</td></tr>
+    <tr><td>Database access</td><td>Yes</td><td>No, not directly</td></tr>
+    <tr><td>Needs reload</td><td>Yes, unless called by AJAX</td><td>No</td></tr>
+    <tr><td>Safe for passwords</td><td>Yes</td><td>No</td></tr>
+  </table>
+
+  <h3>GET vs POST</h3>
+  <table>
+    <tr><th></th><th>GET</th><th>POST</th></tr>
+    <tr><td>Data goes</td><td>In the URL after <code>?</code></td><td>In the request body</td></tr>
+    <tr><td>Visible</td><td>Yes</td><td>No</td></tr>
+    <tr><td>Size limit</td><td>About 2000 characters</td><td>Effectively unlimited</td></tr>
+    <tr><td>Bookmarkable</td><td>Yes</td><td>No</td></tr>
+    <tr><td>Use for</td><td>Search, filters, links</td><td>Login, registration, uploads</td></tr>
+  </table>
+
+  <h3>Session vs cookie</h3>
+  <table>
+    <tr><th></th><th>Session</th><th>Cookie</th></tr>
+    <tr><td>Stored on</td><td>The server</td><td>The user's browser</td></tr>
+    <tr><td>Capacity</td><td>Effectively unlimited</td><td>About 4 KB</td></tr>
+    <tr><td>Lifetime</td><td>Until browser closes or timeout</td><td>Until the expiry you set</td></tr>
+    <tr><td>User can edit</td><td>No</td><td>Yes</td></tr>
+    <tr><td>Safe for a user ID</td><td>Yes</td><td>No</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2><span class="num">6</span>Output tracing rules</h2>
+  <p class="why">Where marks quietly leak. Learn the five patterns below.</p>
+<pre><code>echo "5" + 5;      <span class="cm">// 10   the + forces both to numbers</span>
+echo "5" . 5;      <span class="cm">// 55   the . joins them as text</span>
+
+$x = 5;
+echo $x++;         <span class="cm">// 5    print first, then increase</span>
+echo $x;           <span class="cm">// 6</span>
+echo ++$x;         <span class="cm">// 7    increase first, then print</span>
+
+$i = 10;
+do {
+    echo $i;       <span class="cm">// prints 10 once</span>
+    $i++;
+} while ($i &lt; 5);  <span class="cm">// do...while ALWAYS runs at least once</span>
+
+var_dump(5 == "5");    <span class="cm">// true    compares value only</span>
+var_dump(5 === "5");   <span class="cm">// false   compares value AND type</span>
+
+echo 10 % 3;       <span class="cm">// 1    modulus, the remainder</span>
+echo strlen("Dhaka");            <span class="cm">// 5</span>
+echo strtoupper(substr("Bangladesh", -4));   <span class="cm">// DESH  negative counts from the end</span></code></pre>
+</section>
+
+<section>
+  <h2><span class="num">7</span>JSON, AJAX and classes</h2>
+  <p class="why">Bigger topics, lower priority &mdash; but each has one small piece worth knowing.</p>
+
+  <h3>JSON &mdash; two functions</h3>
+<pre><code>&lt;?php
+header("Content-Type: application/json");   <span class="cm">// before any output</span>
+
+echo json_encode($array);            <span class="cm">// PHP array  -&gt;  JSON text</span>
+
+$arr = json_decode($json, true);     <span class="cm">// JSON  ->  PHP array</span>
+                                     <span class="cm">// the "true" is what gives an ARRAY</span>
+                                     <span class="cm">// without it you get an object ($obj-&gt;name)</span>
+?&gt;</code></pre>
+
+  <h3>AJAX &mdash; loads data without reloading the page</h3>
+<pre><code>fetch("data.php")
+    .then(res =&gt; res.json())
+    .then(data =&gt; {
+        document.getElementById("list").innerHTML = data.name;
+    });</code></pre>
+  <p><strong>AJAX</strong> = Asynchronous JavaScript and XML. It updates part of a page without a full reload, so it is faster and sends less data.</p>
+
+  <h3>Classes and objects</h3>
+<pre><code>&lt;?php
+class Student {
+
+    public $name;                           <span class="cm">// property</span>
+    private $cgpa;
+
+    public function __construct($name, $cgpa) {   <span class="cm">// runs on "new"</span>
+        $this-&gt;name = $name;
+        $this-&gt;cgpa = $cgpa;
+    }
+
+    public function show() {                <span class="cm">// method</span>
+        return $this-&gt;name;
+    }
+}
+
+$s = new Student("Minhaz", 3.7);
+echo $s-&gt;show();                            <span class="cm">// Minhaz</span>
+?&gt;</code></pre>
+  <div class="rule">
+    <strong>Three easy slips:</strong> the arrow is <code>-&gt;</code>, never a dot &mdash; the dot joins strings. Write <code>$this-&gt;name</code>, not <code>$this-&gt;$name</code>. And <code>__construct</code> has <em>two</em> underscores.
+    <br><br>
+    <strong>Visibility:</strong> <code>public</code> = anywhere &nbsp;&middot;&nbsp; <code>private</code> = only inside this class &nbsp;&middot;&nbsp; <code>protected</code> = this class and any that extend it.
+  </div>
+</section>
+
+<section>
+  <h2>Final checklist &mdash; write these on blank paper</h2>
+  <p class="why">Not reading. Writing. If you cannot produce one closed-book, that is your next hour.</p>
+  <ul class="check">
+    <li>The cookie trio &mdash; set for a day, read with <code>isset</code>, delete with <code>time() - 3600</code>.</li>
+    <li>A login page and a guarded page using sessions, with <code>header</code> and <code>exit</code>.</li>
+    <li>A form handler that checks empty fields and validates an email.</li>
+    <li>A file upload handler, including <code>enctype</code> and <code>move_uploaded_file</code>.</li>
+    <li>All three comparison tables from memory. Four rows each is enough.</li>
+    <li>The tracing rules: <code>"5" + 5</code> vs <code>"5" . 5</code>, <code>$x++</code> vs <code>++$x</code>, <code>do...while</code>.</li>
+    <li>A class with a constructor and one method, then create an object and call it.</li>
+  </ul>
+  <div class="rule">
+    <strong>In the exam hall:</strong> if a code question stalls you, write the structure anyway &mdash; the <code>&lt;?php</code>, the <code>if (isset($_POST[...]))</code>, the braces, the variable names. Partial marks are real; an empty answer scores nothing. Start with whichever question you recognise fastest.
+  </div>
+</section>
+
+<footer>
+  CSC 3215 Web Technologies &middot; Final-Term Quiz 2 revision sheet
+</footer>
+
+</body>
+</html>
