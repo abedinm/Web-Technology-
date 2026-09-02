@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Final Term Study Plan</title>
+<style>
+@page { size: A4; margin: 15mm 14mm 14mm 14mm; }
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size:10pt; line-height:1.5; color:#15131c; background:#fff;
+}
+code,pre{font-family:"SF Mono",Menlo,Consolas,"Courier New",monospace}
+
+.title{border-bottom:2.5pt solid #4a4590; padding-bottom:9pt; margin-bottom:14pt}
+.course{
+  font-size:7.5pt; letter-spacing:.13em; text-transform:uppercase;
+  font-weight:700; color:#4a4590; margin-bottom:5pt;
+}
+h1{font-size:23pt; font-weight:800; letter-spacing:-.02em; margin:0 0 6pt; line-height:1.05}
+.meta{font-size:9pt; color:#55506a; margin:0}
+
+.howto{
+  border:1pt solid #c9c4e0; background:#f6f5fb; border-radius:4pt;
+  padding:10pt 13pt; margin-bottom:15pt;
+}
+.howto h2{
+  font-size:9.5pt; letter-spacing:.09em; text-transform:uppercase;
+  color:#4a4590; margin:0 0 7pt; border:0; padding:0;
+}
+.howto p{margin:0 0 6pt; font-size:9.5pt}
+.howto p:last-child{margin-bottom:0}
+
+section{margin-bottom:15pt}
+h2{
+  font-size:13pt; font-weight:800; letter-spacing:-.01em;
+  margin:0 0 3pt; padding-bottom:3pt; border-bottom:.75pt solid #d6d1e6;
+  page-break-after:avoid;
+}
+h2 .num{display:inline-block; min-width:17pt; color:#4a4590; font-variant-numeric:tabular-nums}
+.why{font-size:8.5pt; color:#6a6480; margin:0 0 7pt; font-style:italic}
+h3{font-size:9.5pt; font-weight:700; margin:9pt 0 4pt; page-break-after:avoid}
+p{margin:0 0 7pt}
+
+pre{
+  background:#f7f6fa; border:.75pt solid #ddd8ea; border-left:2.5pt solid #4a4590;
+  border-radius:0 3pt 3pt 0; padding:7pt 9pt; margin:0 0 8pt;
+  font-size:8.5pt; line-height:1.5; white-space:pre-wrap; page-break-inside:avoid;
+}
+:not(pre)>code{background:#f0eef7; padding:.5pt 3pt; border-radius:2pt; font-size:8.5pt; color:#3d3878}
+.cm{color:#7c768f}
+
+.rule{
+  page-break-inside:avoid;
+  border-left:2.5pt solid #b8342f; background:#fdf4f4;
+  padding:6pt 10pt; margin:0 0 8pt; font-size:9pt; border-radius:0 3pt 3pt 0;
+}
+.rule strong{color:#8f2a26}
+.good{border-left-color:#1c7a55; background:#f1faf6}
+.good strong{color:#14603f}
+
+table{border-collapse:collapse; width:100%; font-size:8.5pt; margin:0 0 8pt; page-break-inside:avoid}
+th,td{border:.75pt solid #d6d1e6; padding:4pt 7pt; text-align:left; vertical-align:top}
+th{background:#f0eef7; font-weight:700; font-size:8pt}
+.num-c{text-align:center; font-variant-numeric:tabular-nums; white-space:nowrap}
+.yes{color:#14603f; font-weight:700}
+.no{color:#8f2a26; font-weight:700}
+
+/* day plan */
+.day{
+  border:.75pt solid #d6d1e6; border-left:3pt solid #4a4590;
+  border-radius:0 3pt 3pt 0; padding:8pt 11pt; margin:0 0 7pt;
+  page-break-inside:avoid;
+}
+.day-h{
+  display:flex; justify-content:space-between; align-items:baseline;
+  border-bottom:.5pt solid #e2ddee; padding-bottom:3pt; margin-bottom:5pt;
+}
+.day-n{font-size:10.5pt; font-weight:800; color:#4a4590}
+.day-t{font-size:8pt; color:#6a6480; font-weight:600}
+.day ul{margin:0; padding-left:14pt}
+.day li{font-size:9pt; margin-bottom:2.5pt}
+.day li:last-child{margin-bottom:0}
+.day.eve{border-left-color:#b8342f}
+.day.eve .day-n{color:#8f2a26}
+
+.check{list-style:none; margin:0; padding:0}
+.check li{
+  border-bottom:.5pt solid #e2ddee; padding:5pt 0 5pt 22pt;
+  position:relative; font-size:9.5pt;
+}
+.check li:last-child{border-bottom:0}
+.check li::before{
+  content:""; position:absolute; left:0; top:6.5pt;
+  width:9pt; height:9pt; border:1pt solid #8a84a8; border-radius:1.5pt;
+}
+
+footer{
+  margin-top:14pt; padding-top:7pt; border-top:.75pt solid #d6d1e6;
+  font-size:8pt; color:#6a6480; text-align:center;
+}
+</style>
+</head>
+<body>
+
+<div class="title">
+  <div class="course">CSC 3215 &nbsp;&middot;&nbsp; Web Technologies &nbsp;&middot;&nbsp; Summer 2025&ndash;2026 &nbsp;&middot;&nbsp; Section F</div>
+  <h1>Final Term Study Plan</h1>
+  <p class="meta">Seven days to the term exam. Built from the official course outline: what is actually examinable, what it is worth, and what to do on each of the seven days.</p>
+</div>
+
+<div class="howto">
+  <h2>Read this first</h2>
+  <p><strong>The term exam is the whole game.</strong> It is 60% of the final term, and the final term is 60% of the course &mdash; so this one paper decides <strong>36% of your entire course grade</strong>. Nothing else you can still influence comes close.</p>
+  <p><strong>The final term outweighs the midterm.</strong> The course is 40% midterm and 60% final term. A poor midterm does not decide your grade; this term does more of the deciding than the one you already sat.</p>
+  <p><strong>Four topics are new to you.</strong> Your revision sheet covers PHP basics, forms, sessions, cookies, AJAX and JSON. It does <em>not</em> cover PHP&nbsp;&amp;&nbsp;MySQL, MVC, web security, or API fundamentals &mdash; and all four are on the final. They are Days 1 to 3 below.</p>
+</div>
+
+<section>
+  <h2><span class="num">1</span>What the marks actually look like</h2>
+  <p class="why">From the course outline, section XV. Worth knowing before you decide where the hours go.</p>
+  <table>
+    <tr><th>Final-term component</th><th class="num-c">Weight in final term</th><th class="num-c">Share of course grade</th><th>Can you still change it?</th></tr>
+    <tr><td><strong>Term Exam</strong></td><td class="num-c">60%</td><td class="num-c"><strong>36%</strong></td><td class="yes">Yes &mdash; entirely. This is the plan.</td></tr>
+    <tr><td>2 Quizzes (best 1 counts)</td><td class="num-c">20%</td><td class="num-c">12%</td><td>Already sat</td></tr>
+    <tr><td>Project Prototype</td><td class="num-c">10%</td><td class="num-c">6%</td><td class="yes">Yes &mdash; DoctorConnect is built; make sure it runs on demo day</td></tr>
+    <tr><td>Attendance &amp; Performance</td><td class="num-c">10%</td><td class="num-c">6%</td><td>Fixed</td></tr>
+  </table>
+  <div class="rule good">
+    <strong>Two pieces of good news.</strong> Only the <em>better</em> of your two quizzes counts, so a weak one is already discarded. And the project prototype is 10% that is effectively banked &mdash; DoctorConnect exists, runs, and passes its tests. Protect that by checking it still starts, and spend everything else on the exam.
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">2</span>What is examinable</h2>
+  <p class="why">Weeks 8 to 13 of the course outline &mdash; everything taught after the midterm.</p>
+  <table>
+    <tr><th class="num-c">Week</th><th>Topic</th><th class="num-c">In your revision sheet?</th><th>Where it is covered</th></tr>
+    <tr><td class="num-c">8</td><td>Introduction to PHP</td><td class="num-c yes">Yes</td><td>Revision sheet, blocks 1&ndash;3</td></tr>
+    <tr><td class="num-c">9</td><td>PHP Form Submission, Form Validation</td><td class="num-c yes">Yes</td><td>Revision sheet, block 3</td></tr>
+    <tr><td class="num-c">10</td><td>PHP Session and Cookie</td><td class="num-c yes">Yes</td><td>Revision sheet, blocks 1&ndash;2</td></tr>
+    <tr><td class="num-c">11</td><td><strong>PHP &amp; MySQL, MVC</strong></td><td class="num-c no">No</td><td><strong>Day 1 and Day 3 below</strong></td></tr>
+    <tr><td class="num-c">12</td><td>Data Transportation: AJAX and JSON</td><td class="num-c yes">Yes</td><td>Revision sheet, block 7</td></tr>
+    <tr><td class="num-c">13</td><td><strong>Web Security, API Fundamentals</strong></td><td class="num-c no">No</td><td><strong>Day 2 and Day 3 below</strong></td></tr>
+  </table>
+  <div class="rule">
+    <strong>The gap that matters:</strong> two of the six examinable weeks are topics you have never revised. That is roughly a third of the paper. Days 1&ndash;3 exist to close it, which is why the new material comes before re-reading anything you have already seen.
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">3</span>The seven days</h2>
+  <p class="why">Counting down to the exam. Two to three hours a day; the load is heaviest early on purpose, so the last two days are revision rather than learning.</p>
+
+  <div class="day">
+    <div class="day-h"><span class="day-n">Day 1 &mdash; PHP &amp; MySQL</span><span class="day-t">the biggest new topic &middot; ~2.5 h</span></div>
+    <ul>
+      <li>Learn the connection, and all four CRUD operations (section 4 below).</li>
+      <li>Learn prepared statements properly &mdash; they answer both a MySQL question <em>and</em> a security question.</li>
+      <li>Open <code>doctorconnect/db.php</code> and <code>manage_doctors.php</code>. Every operation you just learned is running in there.</li>
+      <li>Write a connect + SELECT + display loop from memory before you stop.</li>
+    </ul>
+  </div>
+
+  <div class="day">
+    <div class="day-h"><span class="day-n">Day 2 &mdash; Web Security</span><span class="day-t">new &middot; heavily examinable as theory &middot; ~2 h</span></div>
+    <ul>
+      <li>The five attacks and their fixes (section 5 below). Mostly written answers, so this is cheaper than it looks.</li>
+      <li>Learn <code>password_hash()</code> and <code>password_verify()</code> &mdash; near-certain question.</li>
+      <li>Your project already defends against all of these: prepared statements in 16 files, hashing, <code>htmlspecialchars</code>, <code>session_regenerate_id</code>. Open <code>auth.php</code> and name each defence out loud.</li>
+    </ul>
+  </div>
+
+  <div class="day">
+    <div class="day-h"><span class="day-n">Day 3 &mdash; MVC and APIs</span><span class="day-t">new, but both are small &middot; ~2 h</span></div>
+    <ul>
+      <li>MVC: three definitions and why the separation helps (section 6). Pure theory &mdash; your project is <em>not</em> MVC, so there is nothing to look at.</li>
+      <li>API fundamentals: REST, the four HTTP methods, the status codes (section 7).</li>
+      <li><code>workshop-registration/get_workshops.php</code> is effectively a small API endpoint. Read it with the new vocabulary in mind.</li>
+    </ul>
+  </div>
+
+  <div class="day">
+    <div class="day-h"><span class="day-n">Day 4 &mdash; Sessions, cookies, forms</span><span class="day-t">re-drill &middot; ~2 h</span></div>
+    <ul>
+      <li>Blocks 1&ndash;4 of the revision sheet: cookies, sessions, form validation, file upload.</li>
+      <li>Write each from memory. You revised these for the quiz, so this is maintenance, not learning.</li>
+      <li>Then the three comparison tables &mdash; server vs client, GET vs POST, session vs cookie.</li>
+    </ul>
+  </div>
+
+  <div class="day">
+    <div class="day-h"><span class="day-n">Day 5 &mdash; Practice, not reading</span><span class="day-t">~2.5 h</span></div>
+    <ul>
+      <li>All the output tracing rules, closed book.</li>
+      <li>Write four full answers by hand: a form handler, a login with session guard, a file upload, a MySQL SELECT and display.</li>
+      <li>Mark yourself honestly. Whatever you could not write becomes tomorrow's list.</li>
+    </ul>
+  </div>
+
+  <div class="day">
+    <div class="day-h"><span class="day-n">Day 6 &mdash; Close the gaps</span><span class="day-t">~2 h</span></div>
+    <ul>
+      <li>Only the topics you failed on Day 5. Do not re-read what you already got right.</li>
+      <li>Re-test those specific ones at the end of the session.</li>
+      <li>Check DoctorConnect still starts &mdash; XAMPP Apache and MySQL, then load <code>login.php</code>. That protects 6% of your grade for five minutes of effort.</li>
+    </ul>
+  </div>
+
+  <div class="day eve">
+    <div class="day-h"><span class="day-n">Day 7 &mdash; Exam eve</span><span class="day-t">light only &middot; ~1 h, then stop</span></div>
+    <ul>
+      <li>The three comparison tables and the security list. Pure recall, no new material.</li>
+      <li>Skim the code blocks once. Do not start anything you have not already learned.</li>
+      <li>Sleep. A tired pass over familiar material scores worse than a rested one.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">4</span>Day 1 material &mdash; PHP &amp; MySQL</h2>
+  <p class="why">Week 11. The largest new topic and the most likely long-form code question.</p>
+
+  <h3>Connect, then always check</h3>
+<pre><code>&lt;?php
+$conn = mysqli_connect("localhost", "root", "", "school_db");
+
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+?&gt;</code></pre>
+
+  <h3>SELECT and display &mdash; the most common question</h3>
+<pre><code>$result = mysqli_query($conn, "SELECT id, name, email FROM students");
+
+while ($row = mysqli_fetch_assoc($result)) {
+    echo $row["name"] . " - " . $row["email"] . "&lt;br&gt;";
+}
+
+echo mysqli_num_rows($result);      <span class="cm">// how many rows came back</span></code></pre>
+
+  <h3>INSERT, UPDATE, DELETE</h3>
+<pre><code>mysqli_query($conn, "INSERT INTO students (name, email)
+                     VALUES ('Minhaz', 'm@mail.com')");
+
+mysqli_query($conn, "UPDATE students SET name = 'Rahim' WHERE id = 1");
+
+mysqli_query($conn, "DELETE FROM students WHERE id = 1");
+
+mysqli_close($conn);</code></pre>
+
+  <h3>Prepared statements &mdash; the safe way, and worth double marks</h3>
+<pre><code>$stmt = mysqli_prepare($conn, "INSERT INTO students (name, email) VALUES (?, ?)");
+
+mysqli_stmt_bind_param($stmt, "ss", $name, $email);   <span class="cm">// "ss" = two strings</span>
+mysqli_stmt_execute($stmt);
+
+<span class="cm">// Reading results back from a prepared statement</span>
+$stmt = mysqli_prepare($conn, "SELECT * FROM students WHERE email = ?");
+mysqli_stmt_bind_param($stmt, "s", $email);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+$row    = mysqli_fetch_assoc($result);</code></pre>
+  <div class="rule">
+    <strong>The bind_param type letters:</strong> <code>s</code> string &nbsp;&middot;&nbsp; <code>i</code> integer &nbsp;&middot;&nbsp; <code>d</code> double &nbsp;&middot;&nbsp; <code>b</code> blob. One letter per <code>?</code>, in order. Two placeholders and one letter is an error.
+    <br><br>
+    <strong>Why it earns marks twice:</strong> a prepared statement sends the SQL and the data separately, so user input can never be read as SQL. That is the textbook answer to &ldquo;how do you prevent SQL injection&rdquo; as well as a MySQL question.
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">5</span>Day 2 material &mdash; Web Security</h2>
+  <p class="why">Week 13. Mostly written answers, which makes it cheap marks for the time spent.</p>
+
+  <table>
+    <tr><th>Attack</th><th>What it is</th><th>The fix</th></tr>
+    <tr><td><strong>SQL Injection</strong></td><td>User input is treated as SQL, e.g. typing <code>' OR '1'='1</code> into a login box</td><td>Prepared statements with <code>bind_param</code></td></tr>
+    <tr><td><strong>XSS</strong><br>(Cross-Site Scripting)</td><td>User input containing <code>&lt;script&gt;</code> is echoed back and runs in another user's browser</td><td><code>htmlspecialchars()</code> on all output</td></tr>
+    <tr><td><strong>CSRF</strong><br>(Cross-Site Request Forgery)</td><td>A user who is logged in is tricked into submitting a request they did not intend</td><td>A random token in every form, checked on submit</td></tr>
+    <tr><td><strong>Session hijacking</strong></td><td>An attacker steals or fixes the session ID and becomes that user</td><td><code>session_regenerate_id(true)</code> on login; HttpOnly cookies; HTTPS</td></tr>
+    <tr><td><strong>Weak password storage</strong></td><td>Passwords kept as plain text or MD5, readable if the database leaks</td><td><code>password_hash()</code> and <code>password_verify()</code></td></tr>
+  </table>
+
+  <h3>Password handling &mdash; near-certain question</h3>
+<pre><code><span class="cm">// Registering</span>
+$hash = password_hash($password, PASSWORD_DEFAULT);
+
+<span class="cm">// Logging in</span>
+if (password_verify($input, $user["password"])) {
+    session_regenerate_id(true);      <span class="cm">// stops session fixation</span>
+    $_SESSION["user_id"] = $user["id"];
+}</code></pre>
+  <div class="rule">
+    <strong>Say this if asked why hashing:</strong> hashing is <em>one-way</em>. You can never turn a hash back into the password &mdash; you can only hash the attempt and compare. So even if the database leaks, the passwords are not exposed. Never use MD5 or SHA1 for passwords; they are too fast to compute and are considered broken for this purpose.
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">6</span>Day 3 material &mdash; MVC</h2>
+  <p class="why">Week 11. Theory only &mdash; DoctorConnect is procedural, so there is no example of this in your own work.</p>
+  <table>
+    <tr><th>Layer</th><th>Responsibility</th><th>In a PHP app</th></tr>
+    <tr><td><strong>Model</strong></td><td>The data and the rules around it. Talks to the database. Knows nothing about how it is displayed.</td><td>A class or file holding the SQL queries</td></tr>
+    <tr><td><strong>View</strong></td><td>What the user sees. Displays data it is handed. Contains no business logic.</td><td>The HTML template</td></tr>
+    <tr><td><strong>Controller</strong></td><td>Receives the request, asks the Model for data, chooses which View to show.</td><td>The script the form posts to</td></tr>
+  </table>
+  <p><strong>Why MVC is used:</strong> separation of concerns, so a change to the layout cannot break the database code; easier testing, because the Model can be tested without a browser; and easier teamwork, since one person can work on views while another works on data.</p>
+  <div class="rule">
+    <strong>If asked to compare:</strong> in a procedural PHP page the SQL, the logic and the HTML all sit in one file &mdash; quick to write, hard to maintain. MVC splits them into three, which costs more setup but scales to larger applications and larger teams.
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">7</span>Day 3 material &mdash; API fundamentals</h2>
+  <p class="why">Week 13. Small topic, mostly definitions and two lists.</p>
+  <p><strong>API</strong> = Application Programming Interface. A defined way for one program to request data or actions from another, without knowing how it works inside. <strong>REST</strong> is a style of API where each resource has its own URL and you act on it with standard HTTP methods.</p>
+  <table>
+    <tr><th>Method</th><th>Does</th><th>Example</th></tr>
+    <tr><td><code>GET</code></td><td>Read data</td><td><code>GET /students</code> &mdash; list all students</td></tr>
+    <tr><td><code>POST</code></td><td>Create something new</td><td><code>POST /students</code> &mdash; add a student</td></tr>
+    <tr><td><code>PUT</code></td><td>Update an existing item</td><td><code>PUT /students/5</code></td></tr>
+    <tr><td><code>DELETE</code></td><td>Remove an item</td><td><code>DELETE /students/5</code></td></tr>
+  </table>
+  <h3>Status codes worth memorising</h3>
+  <table>
+    <tr><th class="num-c">Code</th><th>Meaning</th><th class="num-c">Code</th><th>Meaning</th></tr>
+    <tr><td class="num-c"><strong>200</strong></td><td>OK &mdash; request succeeded</td><td class="num-c"><strong>401</strong></td><td>Unauthorized &mdash; not logged in</td></tr>
+    <tr><td class="num-c"><strong>201</strong></td><td>Created</td><td class="num-c"><strong>404</strong></td><td>Not Found</td></tr>
+    <tr><td class="num-c"><strong>400</strong></td><td>Bad Request</td><td class="num-c"><strong>500</strong></td><td>Internal Server Error</td></tr>
+  </table>
+  <p>APIs almost always exchange <strong>JSON</strong>, which is why AJAX, JSON and APIs are taught together &mdash; <code>json_encode()</code> on the server, <code>fetch()</code> and <code>res.json()</code> on the client.</p>
+</section>
+
+<section>
+  <h2>Before the exam &mdash; tick these off</h2>
+  <p class="why">Each is something you write on blank paper. If you cannot, that is where the next hour goes.</p>
+  <ul class="check">
+    <li>Connect to MySQL, SELECT rows, and display them in a loop.</li>
+    <li>An INSERT using a prepared statement with <code>bind_param</code>.</li>
+    <li>The five attacks and their fixes, from memory.</li>
+    <li><code>password_hash</code> and <code>password_verify</code>, and why hashing is one-way.</li>
+    <li>Model, View, Controller &mdash; one sentence each, plus why the split helps.</li>
+    <li>The four HTTP methods and six status codes.</li>
+    <li>Cookie set, read and delete.</li>
+    <li>A login page and a session-guarded page.</li>
+    <li>A form handler with empty-field and email validation.</li>
+    <li>A file upload with <code>enctype</code> and <code>move_uploaded_file</code>.</li>
+    <li>The three comparison tables.</li>
+    <li>The tracing rules: <code>"5" + 5</code> vs <code>"5" . 5</code>, <code>$x++</code> vs <code>++$x</code>, <code>do...while</code>.</li>
+    <li>DoctorConnect still starts and loads <code>login.php</code>.</li>
+  </ul>
+  <div class="rule">
+    <strong>In the exam hall:</strong> the paper is 60% of the final term, so treat every question as worth attempting. If one stalls you, write the structure anyway &mdash; the <code>&lt;?php</code>, the <code>if (isset(...))</code>, the braces, the variable names. Partial marks are real; a blank answer scores nothing.
+  </div>
+</section>
+
+<footer>
+  CSC 3215 Web Technologies &middot; Summer 2025&ndash;2026 &middot; Final term study plan &middot; Use with PHP-Quiz-Revision.pdf
+</footer>
+
+</body>
+</html>
